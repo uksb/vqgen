@@ -1,11 +1,11 @@
-# vQmod XML Generator v3.1.0
+# vQmod XML Generator v3.0.0
 
-* Generate XML files for use with vQmod versions 2.2.x
+* Generate XML files for use with vQmod versions <= 2.1.7
 * Built-in File Manager and Log Viewer
 
 **Pre-Requisite**
 
-vQmod version 2.2.x is required for this package
+vQmod version <= 2.1.7 is required for this package
 
 For further information on vQmod and to download it, please visit http://www.vqmod.com/
 
@@ -13,7 +13,7 @@ For further information on vQmod and to download it, please visit http://www.vqm
 
 **copyright** Copyright (c) 2013, UK Site Builder Ltd
 
-**version** $Id: README.md, v3.1.0 2013-01-30 10:00:00 sp Exp $
+**version** $Id: README.md, v3.0.0 2013-01-28 10:00:00 sp Exp $
 
 **license** http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
 
@@ -30,9 +30,6 @@ If not putting the folder on the same level as the vqmod directory, edit the vqg
 
 * Fails to read vqmod xml files that contain html comments which are outside of CDATA tags.
 
-**To Do**
-
-* Replace XMLReader with SimpleXML or DOMDocument
 
 **Future Would Likes**
 
