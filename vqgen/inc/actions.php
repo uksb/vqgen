@@ -1,4 +1,18 @@
 <?php
+/**
+ * vQmod XML Generator v3.0.0
+ * 
+ * Generate XML files for use with vQmod.
+ * Built-in File Manager and Log Viewer.
+ *
+ * For further information please visit {@link http://www.vqmod.com/}
+ * 
+ * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
+ * @copyright Copyright (c) 2013, UK Site Builder Ltd
+ * @version $Id: actions.php,v 3.0.0 2013-01-28 10:00:00 sp Exp $
+ * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
+ */
+ 
 // Get a file
 if(isset($_GET['get'])){
 	$filen = (substr($_GET['get'], -1)=='_'?rtrim($_GET['get'], '_'):$_GET['get']);
@@ -81,16 +95,16 @@ if(isset($_GET['enableall'])){
 if(isset($_POST['generatexml'])){
 	$file = PATH . stripText($_POST['filename']) . '.xml_';
 
-	$output = '<!-- Created using vQmod XML Generator by UKSB - http://www.opencart-extensions.co.uk //-->'."\n";
+	$output = '<!-- Created using vQmod XML Generator by UKSB - http://uksb.github.com/vqgen/ //-->'."\n";
 	$output .= '<modification>'."\n";
-	$output .= "\t" . '<id><![CDATA[' . stripslashes($_POST['fileid']) . ']]></id>' . "\n";
-	$output .= "\t" . '<version><![CDATA[' . stripslashes($_POST['version']) . ']]></version>' . "\n";
-	$output .= "\t" . '<vqmver><![CDATA[' . stripslashes($_POST['vqmodver']) . ']]></vqmver>' . "\n";
-	$output .= "\t" . '<author><![CDATA[' . stripslashes($_POST['author']) . ']]></author>';
+	$output .= "\t" . '<id><![CDATA[' . $_POST['fileid'] . ']]></id>' . "\n";
+	$output .= "\t" . '<version><![CDATA[' . $_POST['version'] . ']]></version>' . "\n";
+	$output .= "\t" . '<vqmver><![CDATA[' . $_POST['vqmodver'] . ']]></vqmver>' . "\n";
+	$output .= "\t" . '<author><![CDATA[' . $_POST['author'] . ']]></author>';
 	
 	foreach ($_POST['file'] as $key => $value){
 		if(!isset($_POST['remove_'.$key])){
-			$output .= "\n\t" . '<file name="' . stripslashes($value) . '">';
+			$output .= "\n\t" . '<file name="' . $value . '">';
 		
 			foreach ($_POST['search'][$key] as $key2 => $val) {
 				if(!isset($_POST['remove_'.$key.'_'.$key2])){
@@ -98,13 +112,14 @@ if(isset($_POST['generatexml'])){
 					$output .= "\n\t\t\t" . '<search';
 					$output .= ' position="' . $_POST['position'][$key][$key2] . '"';
 					$output .= ((int)$_POST['offset'][$key][$key2]>0?' offset="'.(int)$_POST['offset'][$key][$key2].'"':'');
-					$output .= ((int)$_POST['index'][$key][$key2]>0?' index="'.(int)$_POST['index'][$key][$key2].'"':'');
+					$output .= ($_POST['index'][$key][$key2]!='0'&&$_POST['index'][$key][$key2]!=''?' index="'.$_POST['index'][$key][$key2].'"':'');
 					$output .= ($_POST['error'][$key][$key2]!='abort'?' error="' . $_POST['error'][$key][$key2] . '"':'');
 					$output .= ($_POST['regex'][$key][$key2]=='true'?' regex="true"':'');
 					$output .= '>';
-					$output .= '<![CDATA[' . stripslashes($val) . ']]></search>';
-					$output .= "\n\t\t\t" . '<add><![CDATA[' . stripslashes($_POST['add'][$key][$key2])  . ']]></add>';
+					$output .= '<![CDATA[' . $val . ']]></search>';
+					$output .= "\n\t\t\t" . '<add><![CDATA[' . $_POST['add'][$key][$key2]  . ']]></add>';
 					$output .= "\n\t\t" . '</operation>';
+
 					
 					if($_POST['newop'][$key][$key2]>0){
 						for($i=0; $i< $_POST['newop'][$key][$key2]; $i++){

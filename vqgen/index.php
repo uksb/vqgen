@@ -7,9 +7,9 @@
  *
  * For further information please visit {@link http://www.vqmod.com/}
  * 
- * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://www.opencart-extensions.co.uk/}
- * @copyright Copyright (c) 2011, UK Site Builder Ltd
- * @version $Id: index.php,v 2.2.0 2011-12-07 23:00:00 sp Exp $
+ * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
+ * @copyright Copyright (c) 2013, UK Site Builder Ltd
+ * @version $Id: index.php,v 3.0.0 2013-01-28 10:00:00 sp Exp $
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
  */
 

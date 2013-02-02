@@ -1,5 +1,18 @@
 @charset "utf-8";
 /* CSS Document */
+/**
+ * vQmod XML Generator v3.0.0
+ * 
+ * Generate XML files for use with vQmod.
+ * Built-in File Manager and Log Viewer.
+ *
+ * For further information please visit {@link http://www.vqmod.com/}
+ * 
+ * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
+ * @copyright Copyright (c) 2013, UK Site Builder Ltd
+ * @version $Id: styles.css,v 3.0.0 2013-01-28 10:00:00 sp Exp $
+ * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
+ */
 
 body{font:80%/1 Verdana, Geneva, sans-serif;}
 img{border:none;}
@@ -7,7 +20,7 @@ img{border:none;}
 .fi {border:1px solid green;-webkit-border-radius:7px 7px 7px 7px;-moz-border-radius:7px 7px 7px 7px;-khtml-border-radius:7px 7px 7px 7px;border-radius:7px 7px 7px 7px;-webkit-box-shadow:0px 2px 2px #DDDDDD;-moz-box-shadow:0px 2px 2px #DDDDDD;box-shadow:0px 2px 2px #DDDDDD; width:950px;background-color:#F4FFF5;margin-top:10px;}
 .op {border:1px solid green;-webkit-border-radius:7px 7px 7px 7px;-moz-border-radius:7px 7px 7px 7px;-khtml-border-radius:7px 7px 7px 7px;border-radius:7px 7px 7px 7px;-webkit-box-shadow:0px 2px 2px #DDDDDD;-moz-box-shadow:0px 2px 2px #DDDDDD;box-shadow:0px 2px 2px #DDDDDD; width:950px;background-color:#FFFEE8;margin-top:10px;}
 legend {padding: 0.2em 0.5em;margin-bottom:10px;border:1px solid green;color:green;font-size:0.9em;text-align:right;background-color:#FFFEE8;}
-label{float:left;width:140px;padding-right:20px;text-align:right;font-weight:bold;}
+label{float:left;width:150px;padding-right:10px;text-align:right;font-weight:bold;}
 span {text-decoration:underline; }
 span:hover {background-color:#ff0; cursor:pointer; }
 .add, .remove {color:red; }
