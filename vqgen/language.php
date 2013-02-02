@@ -1,6 +1,6 @@
 <?php
 /**
- * vQmod XML Generator v3.1.0
+ * vQmod XML Generator v3.2.0
  * 
  * Generate XML files for use with vQmod.
  * Built-in File Manager and Log Viewer.
@@ -9,7 +9,7 @@
  * 
  * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
  * @copyright Copyright (c) 2013, UK Site Builder Ltd
- * @version $Id: language.php,v 3.1.0 2013-01-30 10:00:00 sp Exp $
+ * @version $Id: language.php,v 3.2.0 2013-02-02 01:30:00 sp Exp $
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
  */
 
@@ -72,19 +72,21 @@ define('OPERATION_TO_PERFORM', 'Operation to perform');
 
 // Labels
 define('FILENAME', '<b>Filename:</b>');
+define('FILENAMES', '<b>Filename(s):</b>');
 define('TITLE', '<b>Title:</b>');
 define('FILE_VERSION', '<b>File Version:</b>');
 define('VQMOD_VERSION', '<b>vQmod Version:</b>');
 define('AUTHOR', '<b>Author:</b>');
-define('PATH_TO_FILENAME', '<b>Path to Filename:</b>');
+define('PATH_TO_FILENAMES', '<b>Path to Filename(s):</b>');
 define('REMOVE_ON_GENERATE', 'Remove on Generate');
+define('INFO', '<b>Info:</b>');
 define('SEARCH', '<b>Search:</b>');
 define('POSITION', '<b>Action:</b>');
 define('OFFSET', '<b>Offset:</b>');
 define('INDEX', '<b>Index:</b>');
 define('ERROR', '<b>Error:</b>');
 define('REGEX', '<b>Regex:</b>');
-
+define('IGNOREIF', '<b>Ignore If:</b>');
 
 // Help Text
 define('FILENAME_HELP', 'This will be the Generated XML filename');
@@ -92,6 +94,7 @@ define('TITLE_HELP', 'The extension name or a brief summary of what this mod doe
 define('FILE_VERSION_HELP', 'The extension version number');
 define('VQMOD_VERSION_HELP', 'The version of vQmod this extension was tested on');
 define('AUTHOR_HELP', 'Your name and/or website address');
+define('INFO_ASSIST', 'Summary of Operation');
 define('SEARCH_ASSIST', 'Single Line or String to Search for');
 define('POSITION_HELP', 'What to do with the \"Add\" data');
 define('OFFSET_ASSIST', 'Single Integer ONLY');
@@ -102,6 +105,8 @@ define('ERROR_ASSIST', 'Abort & Log is default');
 define('ERROR_HELP', 'What to do when \"Search\" can not be found');
 define('REGEX_ASSIST', 'False is default');
 define('REGEX_HELP', 'To use a regular expression for \"Search\", set to \'True\'');
+define('IGNOREIF_ASSIST', 'Ignore this operation IF this string is found in file');
+define('IGREGEX_HELP', 'To use a regular expression for \"Ignore If\", set to \'True\'');
 
 // Select Lists Text
 define('REPLACE', 'Replace \"Search\"');

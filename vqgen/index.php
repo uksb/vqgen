@@ -1,6 +1,6 @@
 <?php
 /**
- * vQmod XML Generator v3.1.0
+ * vQmod XML Generator v3.2.0
  * 
  * Generate XML files for use with vQmod.
  * Built-in File Manager and Log Viewer.
@@ -9,7 +9,7 @@
  * 
  * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
  * @copyright Copyright (c) 2013, UK Site Builder Ltd
- * @version $Id: index.php,v 3.1.0 2013-01-30 10:00:00 sp Exp $
+ * @version $Id: index.php, v3.2.0 2013-02-02 01:30:00 sp Exp $
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
  */
 
@@ -252,46 +252,59 @@ foreach($data as $f){ ?>
 	x += "<div class=\"file\">";
 	x += "\n\t<fieldset id=\"filefieldset_" + <?php echo $idx; ?> + "\" class=\"fi\">";
 	x += "\n\t<legend><?php echo FILE_TO_EDIT; ?></legend>";
-	x += "\n\t\t<label for=\"file_" + <?php echo $idx; ?> + "\"><?php echo PATH_TO_FILENAME; ?></label>";
+	x += "\n\t\t<label for=\"path_" + <?php echo $idx; ?> + "\"><?php echo PATH_TO_FILENAMES; ?></label>";
+	x += "\n\t\t<input id=\"path_" + <?php echo $idx; ?> + "\" name=\"path[" + <?php echo $idx; ?> + "]\" type=\"text\" style=\"width:750px;\" value=\"<?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($f['attributes']['path']), ENT_QUOTES, 'UTF-8')); ?>\"><br><br>"; 
+	x += "\n\t\t<label for=\"file_" + <?php echo $idx; ?> + "\"><?php echo FILENAMES; ?></label>";
 	x += "\n\t\t<input id=\"file_" + <?php echo $idx; ?> + "\" name=\"file[" + <?php echo $idx; ?> + "]\" type=\"text\" style=\"width:750px;\" value=\"<?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($f['attributes']['name']), ENT_QUOTES, 'UTF-8')); ?>\"><br><br>"; 
 	x += "\n\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + <?php echo $idx; ?> + "\" name=\"remove_" + <?php echo $idx; ?> + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('#remove_" + <?php echo $idx; ?> + "').is(':checked')){ $('input[id^=remove_" + <?php echo $idx; ?> + "_]').attr('checked','checked').attr('disabled','disabled'); } else { $('input[id^=remove_" + <?php echo $idx; ?> + "_]').removeAttr('checked').removeAttr('disabled'); }\"></div>";
 	x += "\n\t</fieldset>";
 	
 	<?php 
 	foreach($f['value'] as $op){
+	$arkey=0;
 	?>
 		x += "\n\t<div class=\"operation\">";    
 		x += "\n\t\t<fieldset id=\"operationfieldset_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" class=\"op\">";
 		x += "\n\t\t<legend><?php echo OPERATION_TO_PERFORM; ?></legend>";
+		x += "\n\t\t\t<label for=\"info_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo INFO; ?><br><span class=\"help\"><?php echo INFO_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"info_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"info[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\" value=\"<?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['attributes']['info']), ENT_QUOTES, 'UTF-8')); ?>\"><br><br>";
 		x += "\n\t\t\t<label for=\"search_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo SEARCH; ?><br><span class=\"help\"><?php echo SEARCH_ASSIST; ?></span></label>";
-		x += "\n\t\t\t<input id=\"search_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"search[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\" value=\"<?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][0]['value']), ENT_QUOTES, 'UTF-8')); ?>\"><br><br>";
+		x += "\n\t\t\t<input id=\"search_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"search[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\" value=\"<?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][$arkey]['value']), ENT_QUOTES, 'UTF-8')); ?>\"><br><br>";
 		x += "\n\t\t\t<label for=\"position_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo POSITION; ?></label>";
 		x += "\n\t\t\t<select id=\"position_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"position[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
-		x += "\n\t\t\t\t<option value=\"replace\"<?php if($op['value'][0]['attributes']['position']=='replace'){ ?> selected=\"selected\"<?php } ?>><?php echo REPLACE; ?></option>";
-		x += "\n\t\t\t\t<option value=\"before\"<?php if($op['value'][0]['attributes']['position']=='before'){ ?> selected=\"selected\"<?php } ?>><?php echo BEFORE; ?></option>";
-		x += "\n\t\t\t\t<option value=\"after\"<?php if($op['value'][0]['attributes']['position']=='after'){ ?> selected=\"selected\"<?php } ?>><?php echo AFTER; ?></option>";
-		x += "\n\t\t\t\t<option value=\"top\"<?php if($op['value'][0]['attributes']['position']=='top'){ ?> selected=\"selected\"<?php } ?>><?php echo TOP; ?></option>";
-		x += "\n\t\t\t\t<option value=\"bottom\"<?php if($op['value'][0]['attributes']['position']=='bottom'){ ?> selected=\"selected\"<?php } ?>><?php echo BOTTOM; ?></option>";
-		x += "\n\t\t\t\t<option value=\"all\"<?php if($op['value'][0]['attributes']['position']=='all'){ ?> selected=\"selected\"<?php } ?>><?php echo ALL; ?></option>";
+		x += "\n\t\t\t\t<option value=\"replace\"<?php if($op['value'][$arkey]['attributes']['position']=='replace'){ ?> selected=\"selected\"<?php } ?>><?php echo REPLACE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"before\"<?php if($op['value'][$arkey]['attributes']['position']=='before'){ ?> selected=\"selected\"<?php } ?>><?php echo BEFORE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"after\"<?php if($op['value'][$arkey]['attributes']['position']=='after'){ ?> selected=\"selected\"<?php } ?>><?php echo AFTER; ?></option>";
+		x += "\n\t\t\t\t<option value=\"top\"<?php if($op['value'][$arkey]['attributes']['position']=='top'){ ?> selected=\"selected\"<?php } ?>><?php echo TOP; ?></option>";
+		x += "\n\t\t\t\t<option value=\"bottom\"<?php if($op['value'][$arkey]['attributes']['position']=='bottom'){ ?> selected=\"selected\"<?php } ?>><?php echo BOTTOM; ?></option>";
+		x += "\n\t\t\t\t<option value=\"all\"<?php if($op['value'][$arkey]['attributes']['position']=='all'){ ?> selected=\"selected\"<?php } ?>><?php echo ALL; ?></option>";
 		x += "\n\t\t\t</select>";
 		x += "\n\t\t\t<span class=\"help\"><?php echo POSITION_HELP; ?></span><br><br>";
 		x += "\n\t\t\t<label for=\"offset_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo OFFSET; ?><br><span class=\"help\"><?php echo OFFSET_ASSIST; ?></span></label>";
-		x += "\n\t\t\t<input id=\"offset_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"offset[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:40px;margin-bottom:10px;\" value=\"<?php echo $op['value'][0]['attributes']['offset']; ?>\"> <span class=\"help\"><?php echo OFFSET_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<input id=\"offset_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"offset[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:40px;margin-bottom:10px;\" value=\"<?php echo $op['value'][$arkey]['attributes']['offset']; ?>\"> <span class=\"help\"><?php echo OFFSET_HELP; ?></span><br><br>";
 		x += "\n\t\t\t<label for=\"index_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo INDEX; ?><br><span class=\"help\"><?php echo INDEX_ASSIST; ?></span></label>";
-		x += "\n\t\t\t<input id=\"index_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"index[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:60px;margin-bottom:10px;\" value=\"<?php echo $op['value'][0]['attributes']['index']; ?>\"> <span class=\"help\"><?php echo INDEX_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<input id=\"index_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"index[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:60px;margin-bottom:10px;\" value=\"<?php echo $op['value'][$arkey]['attributes']['index']; ?>\"> <span class=\"help\"><?php echo INDEX_HELP; ?></span><br><br>";
 		x += "\n\t\t\t<label for=\"error_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo ERROR; ?><br><span class=\"help\"><?php echo ERROR_ASSIST; ?></span></label>";
 		x += "\n\t\t\t<select id=\"error_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"error[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
-		x += "\n\t\t\t\t<option value=\"abort\"<?php if(!isset($op['value'][0]['attributes']['error'])){ ?> selected=\"selected\"<?php } ?>><?php echo ABORT_LOG; ?></option>";
-		x += "\n\t\t\t\t<option value=\"log\"<?php if($op['value'][0]['attributes']['error']=='log'){ ?> selected=\"selected\"<?php } ?>><?php echo SKIP_LOG; ?></option>";
-		x += "\n\t\t\t\t<option value=\"skip\"<?php if($op['value'][0]['attributes']['error']=='skip'){ ?> selected=\"selected\"<?php } ?>><?php echo SKIP_NO_LOG; ?></option>";
+		x += "\n\t\t\t\t<option value=\"abort\"<?php if(!isset($op['value'][$arkey]['attributes']['error'])){ ?> selected=\"selected\"<?php } ?>><?php echo ABORT_LOG; ?></option>";
+		x += "\n\t\t\t\t<option value=\"log\"<?php if($op['value'][$arkey]['attributes']['error']=='log'){ ?> selected=\"selected\"<?php } ?>><?php echo SKIP_LOG; ?></option>";
+		x += "\n\t\t\t\t<option value=\"skip\"<?php if($op['value'][$arkey]['attributes']['error']=='skip'){ ?> selected=\"selected\"<?php } ?>><?php echo SKIP_NO_LOG; ?></option>";
 		x += "\n\t\t\t</select> <span class=\"help\"><?php echo ERROR_HELP; ?></span><br><br>";
 		x += "\n\t\t\t<label for=\"regex_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
 		x += "\n\t\t\t<select id=\"regex_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"regex[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
-		x += "\n\t\t\t\t<option value=\"false\"<?php if(!isset($op['value'][0]['attributes']['regex'])){ ?> selected=\"selected\"<?php } ?>><?php echo ISFALSE; ?></option>";
-		x += "\n\t\t\t\t<option value=\"true\"<?php if($op['value'][0]['attributes']['regex']=='true'){ ?> selected=\"selected\"<?php } ?>><?php echo ISTRUE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"false\"<?php if(!isset($op['value'][$arkey]['attributes']['regex'])){ ?> selected=\"selected\"<?php } ?>><?php echo ISFALSE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"true\"<?php if($op['value'][$arkey]['attributes']['regex']=='true'){ ?> selected=\"selected\"<?php } ?>><?php echo ISTRUE; ?></option>";
 		x += "\n\t\t\t</select>";
 		x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
-		x += "\n\t\t\t<textarea id=\"add_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"add[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" style=\"width:940px;height:240px;\"><?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][1]['value']), ENT_QUOTES, 'UTF-8')); ?></textarea><br><br>";
+		x += "\n\t\t\t<textarea id=\"add_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"add[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" style=\"width:940px;height:240px;\"><?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][$arkey+2]['value']), ENT_QUOTES, 'UTF-8')); ?></textarea><br><br>";
+		x += "\n\t\t\t<label for=\"ignoreif_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo IGNOREIF; ?><br><span class=\"help\"><?php echo IGNOREIF_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"ignoreif_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"ignoreif[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\" value=\"<?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][$arkey+1]['value']), ENT_QUOTES, 'UTF-8')); ?>\"><br><br>";
+		x += "\n\t\t\t<label for=\"regex_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<select id=\"igregex_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"igregex[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
+		x += "\n\t\t\t\t<option value=\"false\"<?php if(!isset($op['value'][$arkey+1]['attributes']['regex'])){ ?> selected=\"selected\"<?php } ?>><?php echo ISFALSE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"true\"<?php if($op['value'][$arkey+1]['attributes']['regex']=='true'){ ?> selected=\"selected\"<?php } ?>><?php echo ISTRUE; ?></option>";
+		x += "\n\t\t\t</select>";
+		x += "\n\t\t\t<span class=\"help\"><?php echo IGREGEX_HELP; ?></span><br><br>";
 		x += "\n\t\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"remove_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + <?php echo $idx; ?> + "_]').not(':checked').length===0){ $('#remove_" + <?php echo $idx; ?> + "').attr('checked','checked'); $('input[id^=remove_" + <?php echo $idx; ?> + "_]').attr('disabled','disabled'); }\"></div>";
 		x += "\n\t\t\t<div class=\"delete\"><?php echo ADD; ?> <select id=\"newop_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"newop[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
 		x += "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
@@ -311,7 +324,6 @@ foreach($data as $f){ ?>
 }
 ?>
 	$("#container").append(x);
-
 	var idx = <?php echo $idx-1; ?>;
 	var idx2 = <?php echo $idx2-1; ?>;
 	
@@ -322,7 +334,9 @@ foreach($data as $f){ ?>
 		var x = "\n<div class=\"file\">";
 		x += "\n\t<fieldset id=\"filefieldset_" + idx + "\" class=\"fi\">";
 		x += "\n\t<legend>File to edit</legend>";
-		x += "\n\t\t<label for=\"file_" + idx + "\"><?php echo PATH_TO_FILENAME; ?></label>";
+		x += "\n\t\t<label for=\"path_" + idx + "\"><?php echo PATH_TO_FILENAMES; ?></label>";
+		x += "\n\t\t<input id=\"path_" + idx + "\" name=\"path[" + idx + "]\" type=\"text\" style=\"width:750px;\"><br><br>"; 
+		x += "\n\t\t<label for=\"file_" + idx + "\"><?php echo FILENAMES; ?></label>";
 		x += "\n\t\t<input id=\"file_" + idx + "\" name=\"file[" + idx + "]\" type=\"text\" style=\"width:750px;\"><br><br>"; 
 		x += "\n\t\t<!-- <a onclick=\"idx = idx - 1; $(this).parent().parent().slideUp(function(){ $(this).remove() }); return false\"><span class=\"remove\">Remove</span></a> //-->";
 		x += "\n\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "\" name=\"remove_" + idx + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('#remove_" + idx + "').is(':checked')){ $('input[id^=remove_" + idx + "_]').attr('checked','checked').attr('disabled','disabled'); } else { $('input[id^=remove_" + idx + "_]').removeAttr('checked').removeAttr('disabled'); }\"></div>";
@@ -330,6 +344,8 @@ foreach($data as $f){ ?>
 		x += "\n\t<div class=\"operation\">";    
 		x += "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
 		x += "\n\t\t<legend><?php echo OPERATION_TO_PERFORM; ?></legend>";
+		x += "\n\t\t\t<label for=\"info_" + idx + "_" + idx2 + "\"><?php echo INFO; ?><br><span class=\"help\"><?php echo INFO_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"info_" + idx + "_" + idx2 + "\" name=\"info[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
 		x += "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\"><?php echo SEARCH; ?><br><span class=\"help\"><?php echo SEARCH_ASSIST; ?></span></label>";
 		x += "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
 		x += "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\"><?php echo POSITION; ?></label>";
@@ -359,6 +375,14 @@ foreach($data as $f){ ?>
 		x += "\n\t\t\t</select>";
 		x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
 		x += "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
+		x += "\n\t\t\t<label for=\"ignoreif_" + idx + "_" + idx2 + "\"><?php echo IGNOREIF; ?><br><span class=\"help\"><?php echo IGNOREIF_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"ignoreif_" + idx + "_" + idx2 + "\" name=\"ignoreif[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
+		x += "\n\t\t\t<label for=\"igregex_" + idx + "_" + idx2 + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<select id=\"igregex_" + idx + "_" + idx2 + "\" name=\"igregex[" + idx + "][" + idx2 + "]\">";
+		x += "\n\t\t\t\t<option value=\"false\" selected=\"selected\"><?php echo ISFALSE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"true\"><?php echo ISTRUE; ?></option>";
+		x += "\n\t\t\t</select>";
+		x += "\n\t\t\t<span class=\"help\"><?php echo IGREGEX_HELP; ?></span><br><br>";
 		x += "\n\t\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
 		x += "\n\t\t\t<div class=\"delete\"><?php echo ADD; ?> <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
 		x += "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
@@ -384,6 +408,8 @@ foreach($data as $f){ ?>
 			var x = "\n\t<div class=\"operation\">";    
 			x += "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
 			x += "\n\t\t<legend><?php echo OPERATION_TO_PERFORM; ?></legend>";
+			x += "\n\t\t\t<label for=\"info_" + idx + "_" + idx2 + "\"><?php echo INFO; ?><br><span class=\"help\"><?php echo INFO_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<input id=\"info_" + idx + "_" + idx2 + "\" name=\"info[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
 			x += "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\"><?php echo SEARCH; ?><br><span class=\"help\"><?php echo SEARCH_ASSIST; ?></span></label>";
 			x += "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
 			x += "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\"><?php echo POSITION; ?></label>";
@@ -413,6 +439,14 @@ foreach($data as $f){ ?>
 			x += "\n\t\t\t</select>";
 			x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
 			x += "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
+			x += "\n\t\t\t<label for=\"ignoreif_" + idx + "_" + idx2 + "\"><?php echo IGNOREIF; ?><br><span class=\"help\"><?php echo IGNOREIF_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<input id=\"ignoreif_" + idx + "_" + idx2 + "\" name=\"ignoreif[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
+			x += "\n\t\t\t<label for=\"igregex_" + idx + "_" + idx2 + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<select id=\"igregex_" + idx + "_" + idx2 + "\" name=\"igregex[" + idx + "][" + idx2 + "]\">";
+			x += "\n\t\t\t\t<option value=\"false\" selected=\"selected\"><?php echo ISFALSE; ?></option>";
+			x += "\n\t\t\t\t<option value=\"true\"><?php echo ISTRUE; ?></option>";
+			x += "\n\t\t\t</select>";
+			x += "\n\t\t\t<span class=\"help\"><?php echo IGREGEX_HELP; ?></span><br><br>";
 			x += "\n\t\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
 			x += "\n\t\t\t<div class=\"delete\"><?php echo ADD; ?> <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
 			x += "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
@@ -450,13 +484,17 @@ $(function() {
 	var x = "<div class=\"file\">";
 	x += "\n\t<fieldset id=\"filefieldset_" + idx + "\" class=\"fi\">";
 	x += "\n\t<legend><?php echo FILE_TO_EDIT; ?></legend>";
-	x += "\n\t\t<label for=\"file_" + idx + "\"><?php echo PATH_TO_FILENAME; ?></label>";
+	x += "\n\t\t<label for=\"path_" + idx + "\"><?php echo PATH_TO_FILENAMES; ?></label>";
+	x += "\n\t\t<input id=\"path_" + idx + "\" name=\"path[" + idx + "]\" type=\"text\" style=\"width:750px;\"><br><br>"; 
+	x += "\n\t\t<label for=\"file_" + idx + "\"><?php echo FILENAMES; ?></label>";
 	x += "\n\t\t<input id=\"file_" + idx + "\" name=\"file[" + idx + "]\" type=\"text\" style=\"width:750px;\"><br><br>"; 
 	x += "\n\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "\" name=\"remove_" + idx + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('#remove_" + idx + "').is(':checked')){ $('input[id^=remove_" + idx + "_]').attr('checked','checked').attr('disabled','disabled'); } else { $('input[id^=remove_" + idx + "_]').removeAttr('checked').removeAttr('disabled'); }\"></div>";
 	x += "\n\t</fieldset>";
 	x += "\n\t<div class=\"operation\">";    
 	x += "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
 	x += "\n\t\t<legend><?php echo OPERATION_TO_PERFORM; ?></legend>";
+	x += "\n\t\t\t<label for=\"info_" + idx + "_" + idx2 + "\"><?php echo INFO; ?><br><span class=\"help\"><?php echo INFO_ASSIST; ?></span></label>";
+	x += "\n\t\t\t<input id=\"info_" + idx + "_" + idx2 + "\" name=\"info[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
 	x += "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\"><?php echo SEARCH; ?><br><span class=\"help\"><?php echo SEARCH_ASSIST; ?></span></label>";
 	x += "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
 	x += "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\"><?php echo POSITION; ?></label>";
@@ -486,6 +524,14 @@ $(function() {
 	x += "\n\t\t\t</select>";
 	x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
 	x += "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
+	x += "\n\t\t\t<label for=\"ignoreif_" + idx + "_" + idx2 + "\"><?php echo IGNOREIF; ?><br><span class=\"help\"><?php echo IGNOREIF_ASSIST; ?></span></label>";
+	x += "\n\t\t\t<input id=\"ignoreif_" + idx + "_" + idx2 + "\" name=\"ignoreif[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
+	x += "\n\t\t\t<label for=\"igregex_" + idx + "_" + idx2 + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
+	x += "\n\t\t\t<select id=\"igregex_" + idx + "_" + idx2 + "\" name=\"igregex[" + idx + "][" + idx2 + "]\">";
+	x += "\n\t\t\t\t<option value=\"false\" selected=\"selected\"><?php echo ISFALSE; ?></option>";
+	x += "\n\t\t\t\t<option value=\"true\"><?php echo ISTRUE; ?></option>";
+	x += "\n\t\t\t</select>";
+	x += "\n\t\t\t<span class=\"help\"><?php echo IGREGEX_HELP; ?></span><br><br>";
 	x += "\n\t\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
 	x += "\n\t\t\t<div class=\"delete\"><?php echo ADD; ?> <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
 	x += "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
@@ -506,7 +552,9 @@ $(function() {
 		var x = "\n<div class=\"file\">";
 		x += "\n\t<fieldset id=\"filefieldset_" + idx + "\" class=\"fi\">";
 		x += "\n\t<legend><?php echo FILE_TO_EDIT; ?></legend>";
-		x += "\n\t\t<label for=\"file_" + idx + "\"><?php echo PATH_TO_FILENAME; ?></label>";
+		x += "\n\t\t<label for=\"path_" + idx + "\"><?php echo PATH_TO_FILENAMES; ?></label>";
+		x += "\n\t\t<input id=\"path_" + idx + "\" name=\"path[" + idx + "]\" type=\"text\" style=\"width:750px;\"><br><br>"; 
+		x += "\n\t\t<label for=\"file_" + idx + "\"><?php echo FILENAMES; ?></label>";
 		x += "\n\t\t<input id=\"file_" + idx + "\" name=\"file[" + idx + "]\" type=\"text\" style=\"width:750px;\"><br><br>"; 
 		x += "\n\t\t<!-- <a onclick=\"idx = idx - 1; $(this).parent().parent().slideUp(function(){ $(this).remove() }); return false\"><span class=\"remove\">Remove</span></a> //-->";
 		x += "\n\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "\" name=\"remove_" + idx + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('#remove_" + idx + "').is(':checked')){ $('input[id^=remove_" + idx + "_]').attr('checked','checked').attr('disabled','disabled'); } else { $('input[id^=remove_" + idx + "_]').removeAttr('checked').removeAttr('disabled'); }\"></div>";
@@ -514,6 +562,8 @@ $(function() {
 		x += "\n\t<div class=\"operation\">";    
 		x += "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
 		x += "\n\t\t<legend><?php echo OPERATION_TO_PERFORM; ?></legend>";
+		x += "\n\t\t\t<label for=\"info_" + idx + "_" + idx2 + "\"><?php echo INFO; ?><br><span class=\"help\"><?php echo INFO_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"info_" + idx + "_" + idx2 + "\" name=\"info[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
 		x += "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\"><?php echo SEARCH; ?><br><span class=\"help\"><?php echo SEARCH_ASSIST; ?></span></label>";
 		x += "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
 		x += "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\"><?php echo POSITION; ?></label>";
@@ -544,6 +594,14 @@ $(function() {
 		x += "\n\t\t\t</select>";
 		x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
 		x += "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
+		x += "\n\t\t\t<label for=\"ignoreif_" + idx + "_" + idx2 + "\"><?php echo IGNOREIF; ?><br><span class=\"help\"><?php echo IGNOREIF_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"ignoreif_" + idx + "_" + idx2 + "\" name=\"ignoreif[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
+		x += "\n\t\t\t<label for=\"igregex_" + idx + "_" + idx2 + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<select id=\"igregex_" + idx + "_" + idx2 + "\" name=\"igregex[" + idx + "][" + idx2 + "]\">";
+		x += "\n\t\t\t\t<option value=\"false\" selected=\"selected\"><?php echo ISFALSE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"true\"><?php echo ISTRUE; ?></option>";
+		x += "\n\t\t\t</select>";
+		x += "\n\t\t\t<span class=\"help\"><?php echo IGREGEX_HELP; ?></span><br><br>";
 		x += "\n\t\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
 		x += "\n\t\t\t<div class=\"delete\"><?php echo ADD; ?> <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
 		x += "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
@@ -569,6 +627,8 @@ $(function() {
 			var x = "\n\t<div class=\"operation\">";    
 			x += "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
 			x += "\n\t\t<legend><?php echo OPERATION_TO_PERFORM; ?></legend>";
+			x += "\n\t\t\t<label for=\"info_" + idx + "_" + idx2 + "\"><?php echo INFO; ?><br><span class=\"help\"><?php echo INFO_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<input id=\"info_" + idx + "_" + idx2 + "\" name=\"info[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
 			x += "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\"><?php echo SEARCH; ?><br><span class=\"help\"><?php echo SEARCH_ASSIST; ?></span></label>";
 			x += "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
 			x += "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\"><?php echo POSITION; ?></label>";
@@ -598,6 +658,14 @@ $(function() {
 			x += "\n\t\t\t</select>";
 			x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
 			x += "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
+			x += "\n\t\t\t<label for=\"ignoreif_" + idx + "_" + idx2 + "\"><?php echo IGNOREIF; ?><br><span class=\"help\"><?php echo IGNOREIF_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<input id=\"ignoreif_" + idx + "_" + idx2 + "\" name=\"ignoreif[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
+			x += "\n\t\t\t<label for=\"igregex_" + idx + "_" + idx2 + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<select id=\"igregex_" + idx + "_" + idx2 + "\" name=\"igregex[" + idx + "][" + idx2 + "]\">";
+			x += "\n\t\t\t\t<option value=\"false\" selected=\"selected\"><?php echo ISFALSE; ?></option>";
+			x += "\n\t\t\t\t<option value=\"true\"><?php echo ISTRUE; ?></option>";
+			x += "\n\t\t\t</select>";
+			x += "\n\t\t\t<span class=\"help\"><?php echo IGREGEX_HELP; ?></span><br><br>";
 			x += "\n\t\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
 			x += "\n\t\t\t<div class=\"delete\"><?php echo ADD; ?> <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
 			x += "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
@@ -668,6 +736,7 @@ $(function(){
 		speed: 300,                                        //speed of animation
 		action: 'click',                                   //options: 'click' or 'hover', action to trigger animation
 		topPos: '0px',                                   //position from the top
+
 		leftPos: '50px',                                   //position from the left
 		fixedPosition: false                               //options: true makes it stick(fixed position) on scroll
 	});

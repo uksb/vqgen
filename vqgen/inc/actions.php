@@ -1,6 +1,6 @@
 <?php
 /**
- * vQmod XML Generator v3.1.0
+ * vQmod XML Generator v3.2.0
  * 
  * Generate XML files for use with vQmod.
  * Built-in File Manager and Log Viewer.
@@ -9,7 +9,7 @@
  * 
  * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
  * @copyright Copyright (c) 2013, UK Site Builder Ltd
- * @version $Id: actions.php,v 3.1.0 2013-01-30 10:00:00 sp Exp $
+ * @version $Id: actions.php, v3.2.0 2013-02-02 01:30:00 sp Exp $
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
  */
  
@@ -89,8 +89,6 @@ if(isset($_GET['enableall'])){
 	exit;
 }
 
-// Edit a file
-
 // Generate a new file
 if(isset($_POST['generatexml'])){
 	$file = PATH . stripText($_POST['filename']) . '.xml_';
@@ -104,11 +102,14 @@ if(isset($_POST['generatexml'])){
 	
 	foreach ($_POST['file'] as $key => $value){
 		if(!isset($_POST['remove_'.$key])){
-			$output .= "\n\t" . '<file name="' . $value . '">';
+			$output .= "\n\t" . '<file';
+			$output .= ($_POST['path'][$key]!=''?' path="' . (substr($_POST['path'][$key], -1)!='/'?$_POST['path'][$key].'/':$_POST['path'][$key]) . '"':'');
+			$output .= ' name="' . $_POST['file'][$key] . '">';
 		
 			foreach ($_POST['search'][$key] as $key2 => $val) {
 				if(!isset($_POST['remove_'.$key.'_'.$key2])){
-					$output .= "\n\t\t" . '<operation>';
+					$output .= "\n\t\t" . '<operation';
+					$output .= ($_POST['info'][$key][$key2]!=''?' info="' . $_POST['info'][$key][$key2] . '"':'') . '>';
 					$output .= "\n\t\t\t" . '<search';
 					$output .= ' position="' . $_POST['position'][$key][$key2] . '"';
 					$output .= ((int)$_POST['offset'][$key][$key2]>0?' offset="'.(int)$_POST['offset'][$key][$key2].'"':'');
@@ -116,7 +117,8 @@ if(isset($_POST['generatexml'])){
 					$output .= ($_POST['error'][$key][$key2]!='abort'?' error="' . $_POST['error'][$key][$key2] . '"':'');
 					$output .= ($_POST['regex'][$key][$key2]=='true'?' regex="true"':'');
 					$output .= '>';
-					$output .= '<![CDATA[' . $val . ']]></search>';
+					$output .= '<![CDATA[' . $_POST['search'][$key][$key2] . ']]></search>';
+					$output .= ($_POST['ignoreif'][$key][$key2]!=''?"\n\t\t\t" . '<ignoreif' . ($_POST['igregex'][$key][$key2]=='true'?' regex="true"':'') . '><![CDATA[' . $_POST['ignoreif'][$key][$key2]  . ']]></ignoreif>':'');
 					$output .= "\n\t\t\t" . '<add><![CDATA[' . $_POST['add'][$key][$key2]  . ']]></add>';
 					$output .= "\n\t\t" . '</operation>';
 
