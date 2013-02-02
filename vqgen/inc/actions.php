@@ -1,6 +1,6 @@
 <?php
 /**
- * vQmod XML Generator v3.0.0
+ * vQmod XML Generator v3.1.0
  * 
  * Generate XML files for use with vQmod.
  * Built-in File Manager and Log Viewer.
@@ -9,7 +9,7 @@
  * 
  * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
  * @copyright Copyright (c) 2013, UK Site Builder Ltd
- * @version $Id: actions.php,v 3.0.0 2013-01-28 10:00:00 sp Exp $
+ * @version $Id: actions.php,v 3.1.0 2013-01-30 10:00:00 sp Exp $
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
  */
  
@@ -35,7 +35,7 @@ if(isset($_GET['delete'])){
 			}
 		}
 	}
-	header("Location:./");
+	header("Location:./?handle1=deleted_" . $_GET['delete']);
 	exit;
 }
 
@@ -47,7 +47,7 @@ if(isset($_GET['disable'])){
 			@unlink($cachefile);
 		}
 	}
-	header("Location:./");
+	header("Location:./?handle1=disabled_" . $_GET['disable']);
 	exit;
 }
 
@@ -61,7 +61,7 @@ if(isset($_GET['disableall'])){
 			@unlink($cachefile);
 		}
 	}
-	header("Location:./");
+	header("Location:./?handle1=disabledall");
 	exit;
 }
 
@@ -73,7 +73,7 @@ if(isset($_GET['enable'])){
 			@unlink($cachefile);
 		}
 	}
-	header("Location:./");
+	header("Location:./?handle1=enabled_" . $_GET['enable']);
 	exit;
 }
 
@@ -85,7 +85,7 @@ if(isset($_GET['enableall'])){
 			@unlink($cachefile);
 		}
 	}
-	header("Location:./");
+	header("Location:./?handle1=enabledall");
 	exit;
 }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * vQmod XML Generator v3.0.0
+ * vQmod XML Generator v3.1.0
  * 
  * Generate XML files for use with vQmod.
  * Built-in File Manager and Log Viewer.
@@ -9,30 +9,33 @@
  * 
  * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
  * @copyright Copyright (c) 2013, UK Site Builder Ltd
- * @version $Id: index.php,v 3.0.0 2013-01-28 10:00:00 sp Exp $
+ * @version $Id: index.php,v 3.1.0 2013-01-30 10:00:00 sp Exp $
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
  */
 
 // Set the default file paths relative to this file
-define('LOG', '../vqmod/vqmod.log'); // relative location of vqmod log file
+define('LOG', '../vqmod/logs/'); // relative location of vqmod log files folder
 define('LOGMAX', 10); // max viewale size in MB of log file
 define('PATH', '../vqmod/xml/'); // relative path to the vqmod xml folder
 define('CACHE', '../vqmod/vqcache/'); // relative path to the vqmod cache folder
+define('MODSCACHE', '../vqmod/mods.cache'); // relative path to the vqmod mods.cache file
 
 if (!ini_get('date.timezone')) {
 	date_default_timezone_set('UTC');
 }
 
+include('language.php');
 include('inc/functions.php');
 include('inc/actions.php');
 include('inc/files.php');
 include('inc/log.php');
+include('inc/cache.php');
 ?>
 <!DOCTYPE HTML>
 <head>
 <meta charset="utf-8">
-<title>vQmod XML File Generator</title>
-<meta name="author" content="Simon Powers, UK Site Builder Ltd, http://www.opencart-extensions.co.uk/">
+<title><?php echo PACKAGE_NAME; ?></title>
+<meta name="author" content="Simon Powers, UK Site Builder Ltd, http://uksb.github.com/vqgen/">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
@@ -40,48 +43,50 @@ include('inc/log.php');
 <?php
 if(isset($_GET['generated'])){
 ?>
-<p class="generate">File Generated Successfully at <?php echo date("G:i"); ?></p>
-<p><span class="add">Create a New file</span></p>
-<p><a href="./?enable=<?php echo $_GET['file']; ?>"><img src="images/enable.png" width="16" height="16" alt="enable" title="Enable"> Enable this vQmod</a></p>
+<p class="generate"><?php echo FILE_GENERATED . date("G:i"); ?></p>
+<p><input id="add" class="button" type="button" value="<?php echo CREATE_NEW_FILE; ?>"></p>
+<p><img src="images/enable.png" alt="" width="16" height="16" title="<?php echo ENABLE_THIS_VQMOD; ?>"> <input id="add3" class="button" type="button" value="<?php echo ENABLE_THIS_VQMOD; ?>"></p>
 <?php	
 }
 ?>
-<h1>vQmod XML File Generator</h1>
-<p>First of all you need to install vQmod if you haven't got it already.</p>
-<p>For more info on vQmod and what it does visit <a href="http://www.vqmod.com/">vQmod.com</a></p>
+<h1><?php echo PACKAGE_NAME; ?></h1>
+<?php echo OPENING_STATEMENT; ?>
 <?php 
 if(isset($_GET['file'])){
 ?>
 <form name="generator" action="./" method="post">
 <fieldset class="ma">
-<legend>General file info</legend>
-	<label for="filename">Filename:</label>
+<legend><?php echo GENERAL_FILE_INFO; ?></legend>
+	<label for="filename"><?php echo FILENAME; ?></label>
     <input id="filename" name="filename" type="text" onblur="$(this).val($(this).val().replace('.xml', ''))" style="width:400px;" value="<?php echo str_replace(".xml_", "", $_GET['file']); ?>">
-    .xml <span class="help">This will be the final Generated XML filename</span><br><br>
+    .xml <span class="help"><?php echo FILENAME_HELP; ?></span><br><br>
     
-    <label for="fileid">Title:</label>
-    <input id="fileid" name="fileid" type="text" style="width:400px;" value="<?php echo preg_replace("/\r?\n/", "\\n", htmlentities($id['value'], ENT_QUOTES, 'UTF-8')); ?>"> <span class="help">Give it a name</span><br><br>
+    <label for="fileid"><?php echo TITLE; ?></label>
+    <input id="fileid" name="fileid" type="text" style="width:400px;" value="<?php echo preg_replace("/\r?\n/", "\\n", htmlentities($id['value'], ENT_QUOTES, 'UTF-8')); ?>"> <span class="help"><?php echo TITLE_HELP; ?></span><br><br>
     
-    <label for="version">File Version:</label>
-    <input id="version" name="version" type="text" style="width:50px;" value="<?php echo preg_replace("/\r?\n/", "\\n", htmlentities($version['value'], ENT_QUOTES, 'UTF-8')); ?>"> <span class="help">This can be your version number for this file or the version number of the site</span><br><br>
+    <label for="version"><?php echo FILE_VERSION; ?></label>
+    <input id="version" name="version" type="text" style="width:50px;" value="<?php echo preg_replace("/\r?\n/", "\\n", htmlentities($version['value'], ENT_QUOTES, 'UTF-8')); ?>"> <span class="help"><?php echo FILE_VERSION_HELP; ?></span><br><br>
     
-    <label for="vqmodver">vQmod Version:</label>
-    <input id="vqmodver" name="vqmodver" type="text" style="width:50px;" value="<?php echo preg_replace("/\r?\n/", "\\n", htmlentities($vqmver['value'], ENT_QUOTES, 'UTF-8')); ?>"> <span class="help">Just for your reference</span><br><br>
+    <label for="vqmodver"><?php echo VQMOD_VERSION; ?></label>
+    <input id="vqmodver" name="vqmodver" type="text" style="width:50px;" value="<?php echo preg_replace("/\r?\n/", "\\n", htmlentities($vqmver['value'], ENT_QUOTES, 'UTF-8')); ?>"> <span class="help"><?php echo VQMOD_VERSION_HELP; ?></span><br><br>
     
-    <label for="author">Author:</label>
-    <input id="author" name="author" type="text" style="width:400px;" value="<?php echo preg_replace("/\r?\n/", "\\n", htmlentities($author['value'], ENT_QUOTES, 'UTF-8')); ?>"> <span class="help">Your name and/or website address</span>
+    <label for="author"><?php echo AUTHOR; ?></label>
+    <input id="author" name="author" type="text" style="width:400px;" value="<?php echo preg_replace("/\r?\n/", "\\n", htmlentities($author['value'], ENT_QUOTES, 'UTF-8')); ?>"> <span class="help"><?php echo AUTHOR_HELP; ?></span>
     
 </fieldset>
 
 <div id="container"></div>
 <div>
     <div id="actions">
-        <p><span class="add2">Add a new operation</span></p>
-        <p><span class="add1">Add a new file to edit</span></p>
-        <p><span class="add">Start Over</span></p>
+        <p><input id="add2" class="button" type="button" value="<?php echo ADD_OPERATION; ?>"></p>
+        <p><input id="add1" class="button" type="button" value="<?php echo ADD_FILE; ?>"></p>
+        <p><input id="add" class="button" type="button" value="<?php echo START_OVER; ?>"></p>
     </div>
     <div id="generate">
-    	<p><input type="submit" name="submit" value="Generate XML File" id="dogen"><input type="hidden" name="generatexml" value="1"></p>
+    	<p><input type="submit" name="submit" value="<?php echo GENERATE_XML_FILE; ?>" id="dogen"><input type="hidden" name="generatexml" value="1"></p>
+    </div>
+    <div id="donate">
+    	<p><a href="http://www.uksitebuilder.net/donation/"><img src="images/donate.png" alt="" width="64" height="64" title="<?php echo DONATE; ?>"></a></p>
     </div>
 </div>
 </form>
@@ -89,52 +94,92 @@ if(isset($_GET['file'])){
 }
 if(!isset($_POST['generatexml'])&&!isset($_GET['file'])){
 ?>
-<h2>Fill out the form below with your file edits</h2>
+<h2><?php echo FILL_OUT_FORM; ?></h2>
 <form name="generator" action="./" method="post">
 <fieldset class="ma">
-<legend>General file info</legend>
-	<label for="filename">Filename:</label>
+<legend><?php echo GENERAL_FILE_INFO; ?></legend>
+	<label for="filename"><?php echo FILENAME; ?></label>
     <input id="filename" name="filename" type="text" onblur="$(this).val($(this).val().replace('.xml', ''))" style="width:400px;">
-    .xml <span class="help">This will be the final Generated XML filename</span><br><br>
+    .xml <span class="help"><?php echo FILENAME_HELP; ?></span><br><br>
     
-    <label for="fileid">Title:</label>
-    <input id="fileid" name="fileid" type="text" style="width:400px;"> <span class="help">Give it a name</span><br><br>
+    <label for="fileid"><?php echo TITLE; ?></label>
+    <input id="fileid" name="fileid" type="text" style="width:400px;"> <span class="help"><?php echo TITLE_HELP; ?></span><br><br>
     
-    <label for="version">File Version:</label>
-    <input id="version" name="version" type="text" style="width:50px;" value=""> <span class="help">This can be your version number for this file or the version number of the site</span><br><br>
+    <label for="version"><?php echo FILE_VERSION; ?></label>
+    <input id="version" name="version" type="text" style="width:50px;" value=""> <span class="help"><?php echo FILE_VERSION_HELP; ?></span><br><br>
     
-    <label for="vqmodver">vQmod Version:</label>
-    <input id="vqmodver" name="vqmodver" type="text" style="width:50px;" value=""> <span class="help">Just for your reference</span><br><br>
+    <label for="vqmodver"><?php echo VQMOD_VERSION; ?></label>
+    <input id="vqmodver" name="vqmodver" type="text" style="width:50px;" value=""> <span class="help"><?php echo VQMOD_VERSION_HELP; ?></span><br><br>
     
-    <label for="author">Author:</label>
-    <input id="author" name="author" type="text" style="width:400px;"> <span class="help">Your name and/or website address</span>
+    <label for="author"><?php echo AUTHOR; ?></label>
+    <input id="author" name="author" type="text" style="width:400px;"> <span class="help"><?php echo AUTHOR_HELP; ?></span>
     
 </fieldset>
 
 <div id="container"></div>
 <div>
     <div id="actions">
-        <p><span class="add2">Add a new operation</span></p>
-        <p><span class="add1">Add a new file to edit</span></p>
-        <p><span class="add">Start Over</span></p>
+        <p><input id="add2" class="button" type="button" value="<?php echo ADD_OPERATION; ?>"></p>
+        <p><input id="add1" class="button" type="button" value="<?php echo ADD_FILE; ?>"></p>
+        <p><input id="add" class="button" type="button" value="<?php echo START_OVER; ?>"></p>
     </div>
     <div id="generate">
-        <p><input type="submit" name="submit" value="Generate XML File" id="dogen"><input type="hidden" name="generatexml" value="1"></p>
+        <p><input type="submit" name="submit" value="<?php echo GENERATE_XML_FILE; ?>" id="dogen"><input type="hidden" name="generatexml" value="1"></p>
+    </div>
+    <div id="donate">
+    	<p><a href="http://www.uksitebuilder.net/donation/"><img src="images/donate.png" alt="" width="64" height="64" title="<?php echo DONATE; ?>"></a></p>
     </div>
 </div>
 </form>
 <?php
 }
 ?>
+
+<div class="slide-out-div3">
+<a class="handle3" href="#">Content</a>
+<h3><?php echo VQMOD_CACHE_FILES; ?></h3> <a href="./?clearvqcache=1"><?php echo CLEAR_VQMOD_CACHE; ?></a> <a href="./?clearmodscache=1"><?php echo CLEAR_MODS_CACHE; ?></a><br><br>
+<?php if(isset($_GET['cleared'])&&$_GET['cleared']=='modscache'){ ?><span class="message"><?php echo CLEARED_MODSCACHE; ?></span><br><br><?php } ?>
+<?php if(isset($_GET['cleared'])&&$_GET['cleared']=='vqcache'){ ?><span class="message"><?php echo CLEARED_VQCACHE; ?></span><br><br><?php } ?>
+<?php if(isset($_GET['cleared'])&&substr($_GET['cleared'], 0, 11)=='vqcachefile'){ ?><span class="message"><?php echo sprintf(CLEARED_VQCACHEFILE, substr($_GET['cleared'], 12, (strlen($_GET['cleared'])-12))); ?></span><br><br><?php } ?>
+<b><?php echo CACHE_FILES; ?></b> <select name="file_list" id="file_list">
+<option value=""><?php echo CHOOSE_ONE; ?></option>
+<?php if(count(cache_list(CACHE))){ ?>
+<optgroup label="vqmod/vqcache/">
+ <?php foreach(cache_list(CACHE) as $val){ ?>
+ <option value="<?php echo $val; ?>"<?php if($val == $_GET['vqcachefile']){ ?> selected="selected"<?php } ?>><?php echo $val; ?></option>
+<?php } ?>
+</optgroup>
+<?php } ?>
+<optgroup label="vqmod/">
+ <option value="mods.cache"<?php if('mods.cache' == $_GET['vqcachefile']){ ?> selected="selected"<?php } ?>>mods.cache</option>
+</optgroup>
+</select><?php if(isset($_GET['vqcachefile'])&&$_GET['vqcachefile']!=''&&$_GET['vqcachefile']!='mods.cache'){ ?> <a href="./?deletevqcachefile=<?php echo $_GET['vqcachefile']; ?>"><img src="images/delete.png" width="16" height="16" alt="" title="<?php echo DELETE; ?>"></a><?php } ?><br><br>
+
+<textarea id="cache" readonly><?php echo $cache; ?></textarea>
+</div>
+
+<div class="slide-out-div2">
+<a class="handle2" href="#">Content</a>
+<h3><?php echo VQMOD_LOG_FILES; ?></h3> <a href="./?clearlogs=1"><?php echo CLEAR_VQMOD_LOGS; ?></a> <a href="./?clearlog=1"><?php echo CLEAR_THIS_LOG; ?></a><br><br>
+<?php if(isset($_GET['handle2'])&&$_GET['handle2']=='alllogs'){ ?><span class="message"><?php echo CLEARED_ALL_LOGS; ?></span><br><br><?php } ?>
+<?php if(isset($_GET['handle2'])&&$_GET['handle2']!='alllogs'){ ?><span class="message"><?php echo sprintf(CLEARED_LOG_FILE, $_GET['handle2']); ?></span><br><br><?php } ?>
+<textarea id="log" readonly><?php echo $log; ?></textarea>
+</div>
+
 <div class="slide-out-div">
 <a class="handle" href="#">Content</a>
+<?php if(isset($_GET['handle1'])&&substr($_GET['handle1'], 0, 7)=='deleted'){ ?><span class="message"><?php echo sprintf(VQMOD_FILE_DELETED, substr($_GET['handle1'], 8, (strlen($_GET['handle1'])-8))); ?></span><br><br><?php } 
+elseif(isset($_GET['handle1'])&&$_GET['handle1']=='enabledall'){ ?><span class="message"><?php echo VQMOD_FILES_ENABLED; ?></span><br><br><?php }
+elseif(isset($_GET['handle1'])&&substr($_GET['handle1'], 0, 7)=='enabled'){ ?><span class="message"><?php echo sprintf(VQMOD_FILE_ENABLED, substr($_GET['handle1'], 8, (strlen($_GET['handle1'])-8))); ?></span><br><br><?php } 
+elseif(isset($_GET['handle1'])&&$_GET['handle1']=='disabledall'){ ?><span class="message"><?php echo VQMOD_FILES_DISABLED; ?></span><br><br><?php }
+elseif(isset($_GET['handle1'])&&substr($_GET['handle1'], 0, 8)=='disabled'){ ?><span class="message"><?php echo sprintf(VQMOD_FILE_DISABLED, substr($_GET['handle1'], 9, (strlen($_GET['handle1'])-9))); ?></span><br><br><?php } ?>
 <?php
 if(isset($inactivevqmods)&&count($inactivevqmods)>0){ ?>
-    <h3>Newly Created, Edited and Inactive vQmod Files</h3>
-    <p><span class="help">vQmod Cache will be cleared on enable/delete</span></p>
+    <h3><?php echo VQMOD_FILES_INACTIVE; ?></h3>
+    <p><span class="help"><?php echo DELETE_VQMOD_CACHE; ?></span></p>
     <table>
-    <tr><td class="row2" colspan="2" style="text-align:right;"><a href="./?enableall=1"><img src="images/enable.png" width="16" height="16" alt="enable" title="Enable ALL"></a> Enable ALL</td></tr>
-    <tr><th scope="col">Filename</th><th scope="col">Action</th></tr>
+    <tr><td class="row2" colspan="2" style="text-align:right;"><a href="./?enableall=1"><img src="images/enable.png" width="16" height="16" alt="" title="<?php echo ENABLE_ALL; ?>"></a> <?php echo ENABLE_ALL; ?></td></tr>
+    <tr><th scope="col"><?php echo TH_FILENAME; ?></th><th scope="col"><?php echo TH_ACTION; ?></th></tr>
 <?php
 	$row = '';
 	foreach($inactivevqmods as $av){
@@ -143,11 +188,11 @@ if(isset($inactivevqmods)&&count($inactivevqmods)>0){ ?>
             <td class="<?php echo $row; ?>">
                 <p style="margin:0;"><span class="help"><?php echo $av['file']; ?></span>
                 <br><?php if($av['id']!='') { echo $av['id']; ?>
-                <br><?php } if($av['version']!='') { ?><span class="help">Ver:</span> <?php echo $av['version']; } if($av['vqmver']!=''){ ?> <span class="help">vQmod:</span> <?php echo $av['vqmver']; } if($av['size']!=''){ ?> <span class="help">Size:</span> <?php echo $av['size']; } ?> <span class="help">Date:</span> <?php echo $av['date']; ?>
-                <?php if($av['author']!=''){ ?><br><span class="help">Author:</span> <?php echo $av['author']; } ?></p>
+                <br><?php } if($av['version']!='') { ?><span class="help"><?php echo VER; ?></span> <?php echo $av['version']; } if($av['vqmver']!=''){ ?> <span class="help"><?php echo VQMOD; ?></span> <?php echo $av['vqmver']; } if($av['size']!=''){ ?> <span class="help"><?php echo SIZE; ?></span> <?php echo $av['size']; } ?> <span class="help"><?php echo DATE; ?></span> <?php echo $av['date']; ?>
+                <?php if($av['author']!=''){ ?><br><span class="help"><?php echo VQMOD_AUTHOR; ?></span> <?php echo $av['author']; } ?></p>
             </td>
             <td class="<?php echo $row; ?> actions">
-            	<a href="./?file=<?php echo $av['file'].'_'; ?>"><img src="images/edit.png" width="16" height="16" alt="edit" title="Edit"></a> <a href="./?enable=<?php echo $av['file'].'_'; ?>"><img src="images/enable.png" width="16" height="16" alt="enable" title="Enable"></a> <a href="./?get=<?php echo $av['file'].'_'; ?>"><img src="images/get.png" width="16" height="16" title="Get" alt="get"></a> <a href="./?delete=<?php echo $av['file'].'_'; ?>" onclick="return confirm('Are you sure you want to delete: <?php echo $av['file']; ?>');"><img src="images/delete.png" width="16" height="16" alt="delete" title="Delete"></a>
+            	<a href="./?file=<?php echo $av['file'].'_'; ?>"><img src="images/edit.png" width="16" height="16" alt="" title="<?php echo EDIT; ?>"></a> <a href="./?enable=<?php echo $av['file'].'_'; ?>"><img src="images/enable.png" width="16" height="16" alt="" title="<?php echo ENABLE; ?>"></a> <a href="./?get=<?php echo $av['file'].'_'; ?>"><img src="images/get.png" width="16" height="16" title="<?php echo GET; ?>" alt=""></a> <a href="./?delete=<?php echo $av['file'].'_'; ?>" onclick="return confirm('<?php echo DELETE_CONFIRM . $av['file']; ?>');"><img src="images/delete.png" width="16" height="16" alt="" title="<?php echo DELETE; ?>"></a>
 			</td>
         </tr>
 <?php
@@ -159,11 +204,11 @@ if(isset($inactivevqmods)&&count($inactivevqmods)>0){ ?>
 
 if(isset($activevqmods)&&count($activevqmods)>0){
 ?>
-    <h3>Active vQmod Files</h3>
-    <p><span class="help">vQmod Cache will be cleared on disable/delete<br>File will be disabled on edit and vQmod Cache cleared</span></p>
+    <h3><?php echo VQMOD_FILES_ACTIVE; ?></h3>
+    <p><span class="help"><?php echo DISABLE_VQMOD_CACHE; ?></span></p>
     <table>
-    <tr><td class="row2" colspan="2" style="text-align:right;"><a href="./?disableall=1"><img src="images/disable.png" width="16" height="16" alt="disable" title="Disable ALL"></a> Disable ALL</td></tr>
-    <tr><th scope="col">Filename</th><th scope="col">Action</th></tr>
+    <tr><td class="row2" colspan="2" style="text-align:right;"><a href="./?disableall=1"><img src="images/disable.png" width="16" height="16" alt="" title="<?php echo DISABLE_ALL; ?>"></a> <?php echo DISABLE_ALL; ?></td></tr>
+    <tr><th scope="col"><?php echo TH_FILENAME; ?></th><th scope="col"><?php echo TH_ACTION; ?></th></tr>
 <?php
 	$row = '';
 	foreach($activevqmods as $av){
@@ -172,11 +217,11 @@ if(isset($activevqmods)&&count($activevqmods)>0){
             <td class="<?php echo $row; ?>">
                 <p style="margin:0;"><span class="help"><?php echo $av['file']; ?></span>
                 <br><?php if($av['id']!='') { echo $av['id']; ?>
-                <br><?php } if($av['version']!='') { ?><span class="help">Ver:</span> <?php echo $av['version']; } if($av['vqmver']!=''){ ?> <span class="help">vQmod:</span> <?php echo $av['vqmver']; } if($av['size']!=''){ ?> <span class="help">Size:</span> <?php echo $av['size']; } ?> <span class="help">Date:</span> <?php echo $av['date']; ?>
-                <?php if($av['author']!=''){ ?><br><span class="help">Author:</span> <?php echo $av['author']; } ?></p>
+                <br><?php } if($av['version']!='') { ?><span class="help"><?php echo VER; ?></span> <?php echo $av['version']; } if($av['vqmver']!=''){ ?> <span class="help"><?php echo VQMOD; ?></span> <?php echo $av['vqmver']; } if($av['size']!=''){ ?> <span class="help"><?php echo SIZE; ?></span> <?php echo $av['size']; } ?> <span class="help"><?php echo DATE; ?></span> <?php echo $av['date']; ?>
+                <?php if($av['author']!=''){ ?><br><span class="help"><?php echo VQMOD_AUTHOR; ?></span> <?php echo $av['author']; } ?></p>
             </td>
             <td class="<?php echo $row; ?> actions">
-                <a href="./?file=<?php echo $av['file']; ?>"><img src="images/edit.png" width="16" height="16" alt="edit" title="Edit"></a> <a href="./?disable=<?php echo $av['file']; ?>"><img src="images/disable.png" width="16" height="16" alt="disable" title="Disable"></a> <a href="./?get=<?php echo $av['file']; ?>"><img src="images/get.png" width="16" height="16" title="Get" alt="get"></a> <a href="./?delete=<?php echo $av['file']; ?>" onclick="return confirm('Are you sure you want to delete: <?php echo $av['file']; ?>');"><img src="images/delete.png" width="16" height="16" alt="delete" title="Delete"></a>
+                <a href="./?file=<?php echo $av['file']; ?>"><img src="images/edit.png" width="16" height="16" alt="" title="<?php echo EDIT; ?>"></a> <a href="./?disable=<?php echo $av['file']; ?>"><img src="images/disable.png" width="16" height="16" alt="" title="<?php echo DISABLE; ?>"></a> <a href="./?get=<?php echo $av['file']; ?>"><img src="images/get.png" width="16" height="16" title="<?php echo GET; ?>" alt=""></a> <a href="./?delete=<?php echo $av['file']; ?>" onclick="return confirm('<?php echo DELETE_CONFIRM . $av['file']; ?>');"><img src="images/delete.png" width="16" height="16" alt="" title="<?php echo DELETE; ?>"></a>
             </td>
         </tr>
 <?php
@@ -187,13 +232,13 @@ if(isset($activevqmods)&&count($activevqmods)>0){
 }
 ?>
 </div>
-<div class="slide-out-div2">
-<a class="handle2" href="#">Content</a>
-<h3>vQmod Log File</h3> <a href="./?clearlog=1">Clear Log</a><br><br>
-<textarea id="log" readonly="readonly"><?php echo $log; ?></textarea>
-</div>
-<div id="footer">&copy; Copyright <?php echo (date("Y")>2011?'2011 - ':'') . date("Y"); ?> <a href="http://www.uksitebuilder.net/">UK Site Builder Ltd</a> - Get More Great vQmod Extensions at <a href="http://www.opencart-extensons.co.uk/">OpenCart-Extensons.co.uk</a><br>vQmod Generator by <a href="http://www.uksitebuilder.net" >UK Site Builder Ltd</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a></div>
-<script src="js/jquery.min.js"></script>
+
+<div id="footer">&copy; Copyright <?php echo (date("Y")>2011?'2011 - ':'') . date("Y"); ?> <a href="http://www.uksitebuilder.net/">UK Site Builder Ltd</a> - Get More Great vQmod Extensions at <a href="http://www.opencart-extensions.co.uk/">OpenCart-Extensions.co.uk</a><br><a href="http://uksb.github.com/vqgen/" >vQmod Generator by UK Site Builder Ltd</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a></div>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.min.js"></script>
+<script>
+	// Fallback to loading jQuery from a local path if the CDN is unavailable
+	(window.jQuery || document.write('<script src="/js/jquery-1.9.0.min.js"><\/script>'));
+</script>
 <?php 
 if(isset($_GET['file'])){
 ?>
@@ -204,64 +249,64 @@ var x = '';
 $idx = 0;
 $idx2 = 0;
 foreach($data as $f){ ?>
-	x = x + "<div class=\"file\">";
-	x = x + "\n\t<fieldset id=\"filefieldset_" + <?php echo $idx; ?> + "\" class=\"fi\">";
-	x = x + "\n\t<legend>File to edit</legend>";
-	x = x + "\n\t\t<label for=\"file_" + <?php echo $idx; ?> + "\">Path to Filename:</label>";
-	x = x + "\n\t\t<input id=\"file_" + <?php echo $idx; ?> + "\" name=\"file[" + <?php echo $idx; ?> + "]\" type=\"text\" style=\"width:750px;\" value=\"<?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($f['attributes']['name']), ENT_QUOTES, 'UTF-8')); ?>\"><br><br>"; 
-	x = x + "\n\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + <?php echo $idx; ?> + "\" name=\"remove_" + <?php echo $idx; ?> + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('#remove_" + <?php echo $idx; ?> + "').is(':checked')){ $('input[id^=remove_" + <?php echo $idx; ?> + "_]').attr('checked','checked').attr('disabled','disabled'); } else { $('input[id^=remove_" + <?php echo $idx; ?> + "_]').removeAttr('checked').removeAttr('disabled'); }\"></div>";
-	x = x + "\n\t</fieldset>";
+	x += "<div class=\"file\">";
+	x += "\n\t<fieldset id=\"filefieldset_" + <?php echo $idx; ?> + "\" class=\"fi\">";
+	x += "\n\t<legend><?php echo FILE_TO_EDIT; ?></legend>";
+	x += "\n\t\t<label for=\"file_" + <?php echo $idx; ?> + "\"><?php echo PATH_TO_FILENAME; ?></label>";
+	x += "\n\t\t<input id=\"file_" + <?php echo $idx; ?> + "\" name=\"file[" + <?php echo $idx; ?> + "]\" type=\"text\" style=\"width:750px;\" value=\"<?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($f['attributes']['name']), ENT_QUOTES, 'UTF-8')); ?>\"><br><br>"; 
+	x += "\n\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + <?php echo $idx; ?> + "\" name=\"remove_" + <?php echo $idx; ?> + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('#remove_" + <?php echo $idx; ?> + "').is(':checked')){ $('input[id^=remove_" + <?php echo $idx; ?> + "_]').attr('checked','checked').attr('disabled','disabled'); } else { $('input[id^=remove_" + <?php echo $idx; ?> + "_]').removeAttr('checked').removeAttr('disabled'); }\"></div>";
+	x += "\n\t</fieldset>";
 	
 	<?php 
 	foreach($f['value'] as $op){
 	?>
-		x = x + "\n\t<div class=\"operation\">";    
-		x = x + "\n\t\t<fieldset id=\"operationfieldset_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" class=\"op\">";
-		x = x + "\n\t\t<legend>Operation to perform</legend>";
-		x = x + "\n\t\t\t<label for=\"search_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\">Search:</label>";
-		x = x + "\n\t\t\t<input id=\"search_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"search[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:750px;\" value=\"<?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][0]['value']), ENT_QUOTES, 'UTF-8')); ?>\"><br><br>";
-		x = x + "\n\t\t\t<label for=\"position_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\">Position:</label>";
-		x = x + "\n\t\t\t<select id=\"position_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"position[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
-		x = x + "\n\t\t\t\t<option value=\"replace\"<?php if($op['value'][0]['attributes']['position']=='replace'){ ?> selected=\"selected\"<?php } ?>>replace</option>";
-		x = x + "\n\t\t\t\t<option value=\"before\"<?php if($op['value'][0]['attributes']['position']=='before'){ ?> selected=\"selected\"<?php } ?>>before</option>";
-		x = x + "\n\t\t\t\t<option value=\"after\"<?php if($op['value'][0]['attributes']['position']=='after'){ ?> selected=\"selected\"<?php } ?>>after</option>";
-		x = x + "\n\t\t\t\t<option value=\"top\"<?php if($op['value'][0]['attributes']['position']=='top'){ ?> selected=\"selected\"<?php } ?>>top</option>";
-		x = x + "\n\t\t\t\t<option value=\"bottom\"<?php if($op['value'][0]['attributes']['position']=='bottom'){ ?> selected=\"selected\"<?php } ?>>bottom</option>";
-		x = x + "\n\t\t\t\t<option value=\"all\"<?php if($op['value'][0]['attributes']['position']=='all'){ ?> selected=\"selected\"<?php } ?>>all</option>";
-		x = x + "\n\t\t\t</select>";
-		x = x + "\n\t\t\t<span class=\"help\">What to do with or where to place, the 'add' data in relation to the 'search' data</span><br><br>";
-		x = x + "\n\t\t\t<label for=\"offset_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\">Offset:</label>";
-		x = x + "\n\t\t\t<input id=\"offset_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"offset[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:40px;\" value=\"<?php echo $op['value'][0]['attributes']['offset']; ?>\"> <span class=\"help\">Single Integer ONLY (leave blank for none)</span><br><br>";
-		x = x + "\n\t\t\t<label for=\"index_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\">Index:</label>";
-		x = x + "\n\t\t\t<input id=\"index_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"index[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:40px;\" value=\"<?php echo $op['value'][0]['attributes']['index']; ?>\"> <span class=\"help\">Single Integer or Comma Separated Integers Only (leave blank for none)</span><br><br>";
-		x = x + "\n\t\t\t<label for=\"error_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\">Error:</label>";
-		x = x + "\n\t\t\t<select id=\"error_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"error[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
-		x = x + "\n\t\t\t\t<option value=\"abort\"<?php if(!isset($op['value'][0]['attributes']['error'])){ ?> selected=\"selected\"<?php } ?>>abort &amp; log</option>";
-		x = x + "\n\t\t\t\t<option value=\"log\"<?php if($op['value'][0]['attributes']['error']=='log'){ ?> selected=\"selected\"<?php } ?>>skip &amp; log</option>";
-		x = x + "\n\t\t\t\t<option value=\"skip\"<?php if($op['value'][0]['attributes']['error']=='skip'){ ?> selected=\"selected\"<?php } ?>>skip don't log</option>";
-		x = x + "\n\t\t\t</select> <span class=\"help\">Abort and Log is default</span><br><br>";
-		x = x + "\n\t\t\t<label for=\"regex_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\">Regex:</label>";
-		x = x + "\n\t\t\t<select id=\"regex_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"regex[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
-		x = x + "\n\t\t\t\t<option value=\"false\"<?php if(!isset($op['value'][0]['attributes']['regex'])){ ?> selected=\"selected\"<?php } ?>>false</option>";
-		x = x + "\n\t\t\t\t<option value=\"true\"<?php if($op['value'][0]['attributes']['regex']=='true'){ ?> selected=\"selected\"<?php } ?>>true</option>";
-		x = x + "\n\t\t\t</select>";
-		x = x + "\n\t\t\t<span class=\"help\">False is default - Switch to True to use regular expressions</span><br><br>";
-		x = x + "\n\t\t\t<textarea id=\"add_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"add[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" style=\"width:940px;height:240px;\"><?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][1]['value']), ENT_QUOTES, 'UTF-8')); ?></textarea><br><br>";
-		x = x + "\n\t\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"remove_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + <?php echo $idx; ?> + "_]').not(':checked').length===0){ $('#remove_" + <?php echo $idx; ?> + "').attr('checked','checked'); $('input[id^=remove_" + <?php echo $idx; ?> + "_]').attr('disabled','disabled'); }\"></div>";
-		x = x + "\n\t\t\t<div class=\"delete\">Add <select id=\"newop_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"newop[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
-		x = x + "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
-		x = x + "\n\t\t\t\t<option value=\"1\">1</option>";
-		x = x + "\n\t\t\t\t<option value=\"2\">2</option>";
-		x = x + "\n\t\t\t\t<option value=\"3\">3</option>";
-		x = x + "\n\t\t\t</select> new operation(s) after this one <span class=\"gen\">[Go]</span></div>";
-		x = x + "\n\t\t</fieldset>";
-		x = x + "\n\t</div>";
+		x += "\n\t<div class=\"operation\">";    
+		x += "\n\t\t<fieldset id=\"operationfieldset_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" class=\"op\">";
+		x += "\n\t\t<legend><?php echo OPERATION_TO_PERFORM; ?></legend>";
+		x += "\n\t\t\t<label for=\"search_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo SEARCH; ?><br><span class=\"help\"><?php echo SEARCH_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"search_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"search[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\" value=\"<?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][0]['value']), ENT_QUOTES, 'UTF-8')); ?>\"><br><br>";
+		x += "\n\t\t\t<label for=\"position_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo POSITION; ?></label>";
+		x += "\n\t\t\t<select id=\"position_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"position[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
+		x += "\n\t\t\t\t<option value=\"replace\"<?php if($op['value'][0]['attributes']['position']=='replace'){ ?> selected=\"selected\"<?php } ?>><?php echo REPLACE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"before\"<?php if($op['value'][0]['attributes']['position']=='before'){ ?> selected=\"selected\"<?php } ?>><?php echo BEFORE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"after\"<?php if($op['value'][0]['attributes']['position']=='after'){ ?> selected=\"selected\"<?php } ?>><?php echo AFTER; ?></option>";
+		x += "\n\t\t\t\t<option value=\"top\"<?php if($op['value'][0]['attributes']['position']=='top'){ ?> selected=\"selected\"<?php } ?>><?php echo TOP; ?></option>";
+		x += "\n\t\t\t\t<option value=\"bottom\"<?php if($op['value'][0]['attributes']['position']=='bottom'){ ?> selected=\"selected\"<?php } ?>><?php echo BOTTOM; ?></option>";
+		x += "\n\t\t\t\t<option value=\"all\"<?php if($op['value'][0]['attributes']['position']=='all'){ ?> selected=\"selected\"<?php } ?>><?php echo ALL; ?></option>";
+		x += "\n\t\t\t</select>";
+		x += "\n\t\t\t<span class=\"help\"><?php echo POSITION_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<label for=\"offset_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo OFFSET; ?><br><span class=\"help\"><?php echo OFFSET_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"offset_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"offset[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:40px;margin-bottom:10px;\" value=\"<?php echo $op['value'][0]['attributes']['offset']; ?>\"> <span class=\"help\"><?php echo OFFSET_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<label for=\"index_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo INDEX; ?><br><span class=\"help\"><?php echo INDEX_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"index_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"index[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:60px;margin-bottom:10px;\" value=\"<?php echo $op['value'][0]['attributes']['index']; ?>\"> <span class=\"help\"><?php echo INDEX_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<label for=\"error_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo ERROR; ?><br><span class=\"help\"><?php echo ERROR_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<select id=\"error_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"error[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
+		x += "\n\t\t\t\t<option value=\"abort\"<?php if(!isset($op['value'][0]['attributes']['error'])){ ?> selected=\"selected\"<?php } ?>><?php echo ABORT_LOG; ?></option>";
+		x += "\n\t\t\t\t<option value=\"log\"<?php if($op['value'][0]['attributes']['error']=='log'){ ?> selected=\"selected\"<?php } ?>><?php echo SKIP_LOG; ?></option>";
+		x += "\n\t\t\t\t<option value=\"skip\"<?php if($op['value'][0]['attributes']['error']=='skip'){ ?> selected=\"selected\"<?php } ?>><?php echo SKIP_NO_LOG; ?></option>";
+		x += "\n\t\t\t</select> <span class=\"help\"><?php echo ERROR_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<label for=\"regex_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<select id=\"regex_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"regex[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
+		x += "\n\t\t\t\t<option value=\"false\"<?php if(!isset($op['value'][0]['attributes']['regex'])){ ?> selected=\"selected\"<?php } ?>><?php echo ISFALSE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"true\"<?php if($op['value'][0]['attributes']['regex']=='true'){ ?> selected=\"selected\"<?php } ?>><?php echo ISTRUE; ?></option>";
+		x += "\n\t\t\t</select>";
+		x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<textarea id=\"add_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"add[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" style=\"width:940px;height:240px;\"><?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][1]['value']), ENT_QUOTES, 'UTF-8')); ?></textarea><br><br>";
+		x += "\n\t\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"remove_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + <?php echo $idx; ?> + "_]').not(':checked').length===0){ $('#remove_" + <?php echo $idx; ?> + "').attr('checked','checked'); $('input[id^=remove_" + <?php echo $idx; ?> + "_]').attr('disabled','disabled'); }\"></div>";
+		x += "\n\t\t\t<div class=\"delete\"><?php echo ADD; ?> <select id=\"newop_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"newop[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
+		x += "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
+		x += "\n\t\t\t\t<option value=\"1\">1</option>";
+		x += "\n\t\t\t\t<option value=\"2\">2</option>";
+		x += "\n\t\t\t\t<option value=\"3\">3</option>";
+		x += "\n\t\t\t</select> <?php echo NEW_OPERATIONS; ?> <span class=\"gen\">[<?php echo NOW; ?>]</span></div>";
+		x += "\n\t\t</fieldset>";
+		x += "\n\t</div>";
 <?php
 		$idx2++;
 	}
 	$idx++;
 ?>
-		x = x + "\n</div>";
+		x += "\n</div>";
 <?php
 }
 ?>
@@ -270,114 +315,113 @@ foreach($data as $f){ ?>
 	var idx = <?php echo $idx-1; ?>;
 	var idx2 = <?php echo $idx2-1; ?>;
 	
-	$(".add1").click(function() {
-		idx = idx + 1;
-		idx2 = idx2 + 1;
+	$("#add1").click(function() {
+		idx ++;
+		idx2 ++;
 		
 		var x = "\n<div class=\"file\">";
-		x = x + "\n\t<fieldset id=\"filefieldset_" + idx + "\" class=\"fi\">";
-		x = x + "\n\t<legend>File to edit</legend>";
-		x = x + "\n\t\t<label for=\"file_" + idx + "\">Path to Filename:</label>";
-		x = x + "\n\t\t<input id=\"file_" + idx + "\" name=\"file[" + idx + "]\" type=\"text\" style=\"width:750px;\"><br><br>"; 
-		x = x + "\n\t\t<!-- <a onclick=\"idx = idx - 1; $(this).parent().parent().slideUp(function(){ $(this).remove() }); return false\"><span class=\"remove\">Remove</span></a> //-->";
-		x = x + "\n\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + idx + "\" name=\"remove_" + idx + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('#remove_" + idx + "').is(':checked')){ $('input[id^=remove_" + idx + "_]').attr('checked','checked').attr('disabled','disabled'); } else { $('input[id^=remove_" + idx + "_]').removeAttr('checked').removeAttr('disabled'); }\"></div>";
-		x = x + "\n\t</fieldset>";
-		x = x + "\n\t<div class=\"operation\">";    
-		x = x + "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
-		x = x + "\n\t\t<legend>Operation to perform</legend>";
-		x = x + "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\">Search:</label>";
-		x = x + "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;\"><br><br>";
-		x = x + "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\">Position:</label>";
-		x = x + "\n\t\t\t<select id=\"position_" + idx + "_" + idx2 + "\" name=\"position[" + idx + "][" + idx2 + "]\">";
-		x = x + "\n\t\t\t\t<option value=\"replace\" selected=\"selected\">replace</option>";
-		x = x + "\n\t\t\t\t<option value=\"before\">before</option>";
-		x = x + "\n\t\t\t\t<option value=\"after\">after</option>";
-		x = x + "\n\t\t\t\t<option value=\"top\">top</option>";
-		x = x + "\n\t\t\t\t<option value=\"bottom\">bottom</option>";
-		x = x + "\n\t\t\t\t<option value=\"all\">all</option>";
-		x = x + "\n\t\t\t</select>";
-		x = x + "\n\t\t\t<span class=\"help\">What to do with or where to place, the 'add' data in relation to the 'search' data</span><br><br>";
-		x = x + "\n\t\t\t<label for=\"offset_" + idx + "_" + idx2 + "\">Offset:</label>";
-		x = x + "\n\t\t\t<input id=\"offset_" + idx + "_" + idx2 + "\" name=\"offset[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;\"> <span class=\"help\">Single Integer ONLY (leave blank for none)</span><br><br>";
-		x = x + "\n\t\t\t<label for=\"index_" + idx + "_" + idx2 + "\">Index:</label>";
-		x = x + "\n\t\t\t<input id=\"index_" + idx + "_" + idx2 + "\" name=\"index[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;\"> <span class=\"help\">Single Integer or Comma Separated Integers Only (leave blank for none)</span><br><br>";
-		x = x + "\n\t\t\t<label for=\"error_" + idx + "_" + idx2 + "\">Error:</label>";
-		x = x + "\n\t\t\t<select id=\"error_" + idx + "_" + idx2 + "\" name=\"error[" + idx + "][" + idx2 + "]\">";
-		x = x + "\n\t\t\t\t<option value=\"abort\" selected=\"selected\">abort &amp; log</option>";
-		x = x + "\n\t\t\t\t<option value=\"log\">skip &amp; log</option>";
-		x = x + "\n\t\t\t\t<option value=\"skip\">skip don't log</option>";
-		x = x + "\n\t\t\t</select> <span class=\"help\">Abort and Log is default</span><br><br>";
-		x = x + "\n\t\t\t<label for=\"regex_" + idx + "_" + idx2 + "\">Regex:</label>";
-		x = x + "\n\t\t\t<select id=\"regex_" + idx + "_" + idx2 + "\" name=\"regex[" + idx + "][" + idx2 + "]\">";
-		x = x + "\n\t\t\t\t<option value=\"false\" selected=\"selected\">false</option>";
-		x = x + "\n\t\t\t\t<option value=\"true\">true</option>";
-		x = x + "\n\t\t\t</select>";
-		x = x + "\n\t\t\t<span class=\"help\">False is default - Switch to True to use regular expressions</span><br><br>";
-		x = x + "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
-		x = x + "\n\t\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
-		x = x + "\n\t\t\t<div class=\"delete\">Add <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
-		x = x + "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
-		x = x + "\n\t\t\t\t<option value=\"1\">1</option>";
-		x = x + "\n\t\t\t\t<option value=\"2\">2</option>";
-		x = x + "\n\t\t\t\t<option value=\"3\">3</option>";
-		x = x + "\n\t\t\t</select> new operation(s) after this one <span class=\"gen\">[Go]</span></div>";
-		x = x + "\n\t\t</fieldset>";
-		x = x + "\n\t</div>";
-		x = x + "\n</div>";
+		x += "\n\t<fieldset id=\"filefieldset_" + idx + "\" class=\"fi\">";
+		x += "\n\t<legend>File to edit</legend>";
+		x += "\n\t\t<label for=\"file_" + idx + "\"><?php echo PATH_TO_FILENAME; ?></label>";
+		x += "\n\t\t<input id=\"file_" + idx + "\" name=\"file[" + idx + "]\" type=\"text\" style=\"width:750px;\"><br><br>"; 
+		x += "\n\t\t<!-- <a onclick=\"idx = idx - 1; $(this).parent().parent().slideUp(function(){ $(this).remove() }); return false\"><span class=\"remove\">Remove</span></a> //-->";
+		x += "\n\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "\" name=\"remove_" + idx + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('#remove_" + idx + "').is(':checked')){ $('input[id^=remove_" + idx + "_]').attr('checked','checked').attr('disabled','disabled'); } else { $('input[id^=remove_" + idx + "_]').removeAttr('checked').removeAttr('disabled'); }\"></div>";
+		x += "\n\t</fieldset>";
+		x += "\n\t<div class=\"operation\">";    
+		x += "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
+		x += "\n\t\t<legend><?php echo OPERATION_TO_PERFORM; ?></legend>";
+		x += "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\"><?php echo SEARCH; ?><br><span class=\"help\"><?php echo SEARCH_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
+		x += "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\"><?php echo POSITION; ?></label>";
+		x += "\n\t\t\t<select id=\"position_" + idx + "_" + idx2 + "\" name=\"position[" + idx + "][" + idx2 + "]\">";
+		x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+		x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
+		x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
+		x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
+		x += "\n\t\t\t</select>";
+		x += "\n\t\t\t<span class=\"help\"><?php echo POSITION_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<label for=\"offset_" + idx + "_" + idx2 + "\"><?php echo OFFSET; ?><br><span class=\"help\"><?php echo OFFSET_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"offset_" + idx + "_" + idx2 + "\" name=\"offset[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;margin-bottom:10px;\"> <span class=\"help\"><?php echo OFFSET_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<label for=\"index_" + idx + "_" + idx2 + "\"><?php echo INDEX; ?><br><span class=\"help\"><?php echo INDEX_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"index_" + idx + "_" + idx2 + "\" name=\"index[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:60px;margin-bottom:10px;\"> <span class=\"help\"><?php echo INDEX_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<label for=\"error_" + idx + "_" + idx2 + "\"><?php echo ERROR; ?><br><span class=\"help\"><?php echo ERROR_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<select id=\"error_" + idx + "_" + idx2 + "\" name=\"error[" + idx + "][" + idx2 + "]\">";
+		x += "\n\t\t\t\t<option value=\"abort\" selected=\"selected\"><?php echo ABORT_LOG; ?></option>";
+		x += "\n\t\t\t\t<option value=\"log\"><?php echo SKIP_LOG; ?></option>";
+		x += "\n\t\t\t\t<option value=\"skip\"><?php echo SKIP_NO_LOG; ?></option>";
+		x += "\n\t\t\t</select> <span class=\"help\"><?php echo ERROR_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<label for=\"regex_" + idx + "_" + idx2 + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<select id=\"regex_" + idx + "_" + idx2 + "\" name=\"regex[" + idx + "][" + idx2 + "]\">";
+		x += "\n\t\t\t\t<option value=\"false\" selected=\"selected\"><?php echo ISFALSE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"true\"><?php echo ISTRUE; ?></option>";
+		x += "\n\t\t\t</select>";
+		x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
+		x += "\n\t\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
+		x += "\n\t\t\t<div class=\"delete\"><?php echo ADD; ?> <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
+		x += "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
+		x += "\n\t\t\t\t<option value=\"1\">1</option>";
+		x += "\n\t\t\t\t<option value=\"2\">2</option>";
+		x += "\n\t\t\t\t<option value=\"3\">3</option>";
+		x += "\n\t\t\t</select> <?php echo NEW_OPERATIONS; ?> <span class=\"gen\">[<?php echo NOW; ?>]</span></div>";
+		x += "\n\t\t</fieldset>";
+		x += "\n\t</div>";
+		x += "\n</div>";
 		
 		$("#container").append(x);
 		var $elem = $('body');
 		$('html, body').animate({scrollTop: $elem.height()}, 800);
 	});
 	
-	$(".add2").click(function() {
+	$("#add2").click(function() {
 		if($('#remove_' + idx ).is(':checked')){
-			alert('Please clear the \'Remove on Generate\' checkbox for this file, if you wish to add a new operation to it.\n\nAlternatively, you can add a new file to edit.');
+			alert('<?php echo CLEAR_REMOVE_ON_GENERATE; ?>');
 		}else{
-			idx = idx;
-			idx2 = idx2 + 1;
+			idx2 ++;
 			
 			var x = "\n\t<div class=\"operation\">";    
-			x = x + "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
-			x = x + "\n\t\t<legend>Operation to perform</legend>";
-			x = x + "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\">Search:</label>";
-			x = x + "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;\"><br><br>";
-			x = x + "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\">Position:</label>";
-			x = x + "\n\t\t\t<select id=\"position_" + idx + "_" + idx2 + "\" name=\"position[" + idx + "][" + idx2 + "]\">";
-			x = x + "\n\t\t\t\t<option value=\"replace\" selected=\"selected\">replace</option>";
-			x = x + "\n\t\t\t\t<option value=\"before\">before</option>";
-			x = x + "\n\t\t\t\t<option value=\"after\">after</option>";
-			x = x + "\n\t\t\t\t<option value=\"top\">top</option>";
-			x = x + "\n\t\t\t\t<option value=\"bottom\">bottom</option>";
-			x = x + "\n\t\t\t\t<option value=\"all\">all</option>";
-			x = x + "\n\t\t\t</select>";
-			x = x + "\n\t\t\t<span class=\"help\">What to do with or where to place, the 'add' data in relation to the 'search' data</span><br><br>";
-			x = x + "\n\t\t\t<label for=\"offset_" + idx + "_" + idx2 + "\">Offset:</label>";
-			x = x + "\n\t\t\t<input id=\"offset_" + idx + "_" + idx2 + "\" name=\"offset[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;\"> <span class=\"help\">Single Integer ONLY (leave blank for none)</span><br><br>";
-			x = x + "\n\t\t\t<label for=\"index_" + idx + "_" + idx2 + "\">Index:</label>";
-			x = x + "\n\t\t\t<input id=\"index_" + idx + "_" + idx2 + "\" name=\"index[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;\"> <span class=\"help\">Single Integer or Comma Separated Integers Only (leave blank for none)</span><br><br>";
-			x = x + "\n\t\t\t<label for=\"error_" + idx + "_" + idx2 + "\">Error:</label>";
-			x = x + "\n\t\t\t<select id=\"error_" + idx + "_" + idx2 + "\" name=\"error[" + idx + "][" + idx2 + "]\">";
-			x = x + "\n\t\t\t\t<option value=\"abort\" selected=\"selected\">abort &amp; log</option>";
-			x = x + "\n\t\t\t\t<option value=\"log\">skip &amp; log</option>";
-			x = x + "\n\t\t\t\t<option value=\"skip\">skip don't log</option>";
-			x = x + "\n\t\t\t</select> <span class=\"help\">Abort and Log is default</span><br><br>";
-			x = x + "\n\t\t\t<label for=\"regex_" + idx + "_" + idx2 + "\">Regex:</label>";
-			x = x + "\n\t\t\t<select id=\"regex_" + idx + "_" + idx2 + "\" name=\"regex[" + idx + "][" + idx2 + "]\">";
-			x = x + "\n\t\t\t\t<option value=\"false\" selected=\"selected\">false</option>";
-			x = x + "\n\t\t\t\t<option value=\"true\">true</option>";
-			x = x + "\n\t\t\t</select>";
-			x = x + "\n\t\t\t<span class=\"help\">False is default - Switch to True to use regular expressions</span><br><br>";
-			x = x + "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
-			x = x + "\n\t\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
-			x = x + "\n\t\t\t<div class=\"delete\">Add <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
-			x = x + "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
-			x = x + "\n\t\t\t\t<option value=\"1\">1</option>";
-			x = x + "\n\t\t\t\t<option value=\"2\">2</option>";
-			x = x + "\n\t\t\t\t<option value=\"3\">3</option>";
-			x = x + "\n\t\t\t</select> new operation(s) after this one <span class=\"gen\">[Go]</span></div>";
-			x = x + "\n\t\t</fieldset>";
-			x = x + "\n\t</div>";
+			x += "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
+			x += "\n\t\t<legend><?php echo OPERATION_TO_PERFORM; ?></legend>";
+			x += "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\"><?php echo SEARCH; ?><br><span class=\"help\"><?php echo SEARCH_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
+			x += "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\"><?php echo POSITION; ?></label>";
+			x += "\n\t\t\t<select id=\"position_" + idx + "_" + idx2 + "\" name=\"position[" + idx + "][" + idx2 + "]\">";
+			x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
+			x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
+			x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+			x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
+			x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
+			x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
+			x += "\n\t\t\t</select>";
+			x += "\n\t\t\t<span class=\"help\"><?php echo POSITION_HELP; ?></span><br><br>";
+			x += "\n\t\t\t<label for=\"offset_" + idx + "_" + idx2 + "\"><?php echo OFFSET; ?><br><span class=\"help\"><?php echo OFFSET_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<input id=\"offset_" + idx + "_" + idx2 + "\" name=\"offset[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;margin-bottom:10px;\"> <span class=\"help\"><?php echo OFFSET_HELP; ?></span><br><br>";
+			x += "\n\t\t\t<label for=\"index_" + idx + "_" + idx2 + "\"><?php echo INDEX; ?><br><span class=\"help\"><?php echo INDEX_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<input id=\"index_" + idx + "_" + idx2 + "\" name=\"index[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:60px;margin-bottom:10px;\"> <span class=\"help\"><?php echo INDEX_HELP; ?></span><br><br>";
+			x += "\n\t\t\t<label for=\"error_" + idx + "_" + idx2 + "\"><?php echo ERROR; ?><br><span class=\"help\"><?php echo ERROR_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<select id=\"error_" + idx + "_" + idx2 + "\" name=\"error[" + idx + "][" + idx2 + "]\">";
+			x += "\n\t\t\t\t<option value=\"abort\" selected=\"selected\"><?php echo ABORT_LOG; ?></option>";
+			x += "\n\t\t\t\t<option value=\"log\"><?php echo SKIP_LOG; ?></option>";
+			x += "\n\t\t\t\t<option value=\"skip\"><?php echo SKIP_NO_LOG; ?></option>";
+			x += "\n\t\t\t</select> <span class=\"help\"><?php echo ERROR_HELP; ?></span><br><br>";
+			x += "\n\t\t\t<label for=\"regex_" + idx + "_" + idx2 + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<select id=\"regex_" + idx + "_" + idx2 + "\" name=\"regex[" + idx + "][" + idx2 + "]\">";
+			x += "\n\t\t\t\t<option value=\"false\" selected=\"selected\"><?php echo ISFALSE; ?></option>";
+			x += "\n\t\t\t\t<option value=\"true\"><?php echo ISTRUE; ?></option>";
+			x += "\n\t\t\t</select>";
+			x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
+			x += "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
+			x += "\n\t\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
+			x += "\n\t\t\t<div class=\"delete\"><?php echo ADD; ?> <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
+			x += "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
+			x += "\n\t\t\t\t<option value=\"1\">1</option>";
+			x += "\n\t\t\t\t<option value=\"2\">2</option>";
+			x += "\n\t\t\t\t<option value=\"3\">3</option>";
+			x += "\n\t\t\t</select> <?php echo NEW_OPERATIONS; ?> <span class=\"gen\">[<?php echo NOW; ?>]</span></div>";
+			x += "\n\t\t</fieldset>";
+			x += "\n\t</div>";
 			
 			$(".file:last").append(x);
 			
@@ -386,7 +430,7 @@ foreach($data as $f){ ?>
 		}
 	});
 
-	$(".add").click(function() {
+	$("#add").click(function() {
 		location.href='./';
 	});
 	$(".gen").bind('click', function() {
@@ -404,165 +448,165 @@ var idx = 0;
 var idx2 = 0;
 $(function() {
 	var x = "<div class=\"file\">";
-	x = x + "\n\t<fieldset id=\"filefieldset_" + idx + "\" class=\"fi\">";
-	x = x + "\n\t<legend>File to edit</legend>";
-	x = x + "\n\t\t<label for=\"file_" + idx + "\">Path to Filename:</label>";
-	x = x + "\n\t\t<input id=\"file_" + idx + "\" name=\"file[" + idx + "]\" type=\"text\" style=\"width:750px;\"><br><br>"; 
-	x = x + "\n\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + idx + "\" name=\"remove_" + idx + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('#remove_" + idx + "').is(':checked')){ $('input[id^=remove_" + idx + "_]').attr('checked','checked').attr('disabled','disabled'); } else { $('input[id^=remove_" + idx + "_]').removeAttr('checked').removeAttr('disabled'); }\"></div>";
-	x = x + "\n\t</fieldset>";
-	x = x + "\n\t<div class=\"operation\">";    
-	x = x + "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
-	x = x + "\n\t\t<legend>Operation to perform</legend>";
-	x = x + "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\">Search:</label>";
-	x = x + "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;\"><br><br>";
-	x = x + "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\">Position:</label>";
-	x = x + "\n\t\t\t<select id=\"position_" + idx + "_" + idx2 + "\" name=\"position[" + idx + "][" + idx2 + "]\">";
-	x = x + "\n\t\t\t\t<option value=\"replace\" selected=\"selected\">replace</option>";
-	x = x + "\n\t\t\t\t<option value=\"before\">before</option>";
-	x = x + "\n\t\t\t\t<option value=\"after\">after</option>";
-	x = x + "\n\t\t\t\t<option value=\"top\">top</option>";
-	x = x + "\n\t\t\t\t<option value=\"bottom\">bottom</option>";
-	x = x + "\n\t\t\t\t<option value=\"all\">all</option>";
-	x = x + "\n\t\t\t</select>";
-	x = x + "\n\t\t\t<span class=\"help\">What to do with or where to place, the 'add' data in relation to the 'search' data</span><br><br>";
-	x = x + "\n\t\t\t<label for=\"offset_" + idx + "_" + idx2 + "\">Offset:</label>";
-	x = x + "\n\t\t\t<input id=\"offset_" + idx + "_" + idx2 + "\" name=\"offset[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;\"> <span class=\"help\">Single Integer ONLY (leave blank for none)</span><br><br>";
-	x = x + "\n\t\t\t<label for=\"index_" + idx + "_" + idx2 + "\">Index:</label>";
-	x = x + "\n\t\t\t<input id=\"index_" + idx + "_" + idx2 + "\" name=\"index[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;\"> <span class=\"help\">Single Integer or Comma Separated Integers Only (leave blank for none)</span><br><br>";
-	x = x + "\n\t\t\t<label for=\"error_" + idx + "_" + idx2 + "\">Error:</label>";
-	x = x + "\n\t\t\t<select id=\"error_" + idx + "_" + idx2 + "\" name=\"error[" + idx + "][" + idx2 + "]\">";
-	x = x + "\n\t\t\t\t<option value=\"abort\" selected=\"selected\">abort &amp; log</option>";
-	x = x + "\n\t\t\t\t<option value=\"log\">skip &amp; log</option>";
-	x = x + "\n\t\t\t\t<option value=\"skip\">skip don't log</option>";
-	x = x + "\n\t\t\t</select> <span class=\"help\">Abort and Log is default</span><br><br>";
-	x = x + "\n\t\t\t<label for=\"regex_" + idx + "_" + idx2 + "\">Regex:</label>";
-	x = x + "\n\t\t\t<select id=\"regex_" + idx + "_" + idx2 + "\" name=\"regex[" + idx + "][" + idx2 + "]\">";
-	x = x + "\n\t\t\t\t<option value=\"false\" selected=\"selected\">false</option>";
-	x = x + "\n\t\t\t\t<option value=\"true\">true</option>";
-	x = x + "\n\t\t\t</select>";
-	x = x + "\n\t\t\t<span class=\"help\">False is default - Switch to True to use regular expressions</span><br><br>";
-	x = x + "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
-	x = x + "\n\t\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
-	x = x + "\n\t\t\t<div class=\"delete\">Add <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
-	x = x + "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
-	x = x + "\n\t\t\t\t<option value=\"1\">1</option>";
-	x = x + "\n\t\t\t\t<option value=\"2\">2</option>";
-	x = x + "\n\t\t\t\t<option value=\"3\">3</option>";
-	x = x + "\n\t\t\t</select> new operation(s) after this one <span class=\"gen\">[Go]</span></div>";
-	x = x + "\n\t\t</fieldset>";
-	x = x + "\n\t</div>";
-	x = x + "\n</div>";
-	
+	x += "\n\t<fieldset id=\"filefieldset_" + idx + "\" class=\"fi\">";
+	x += "\n\t<legend><?php echo FILE_TO_EDIT; ?></legend>";
+	x += "\n\t\t<label for=\"file_" + idx + "\"><?php echo PATH_TO_FILENAME; ?></label>";
+	x += "\n\t\t<input id=\"file_" + idx + "\" name=\"file[" + idx + "]\" type=\"text\" style=\"width:750px;\"><br><br>"; 
+	x += "\n\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "\" name=\"remove_" + idx + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('#remove_" + idx + "').is(':checked')){ $('input[id^=remove_" + idx + "_]').attr('checked','checked').attr('disabled','disabled'); } else { $('input[id^=remove_" + idx + "_]').removeAttr('checked').removeAttr('disabled'); }\"></div>";
+	x += "\n\t</fieldset>";
+	x += "\n\t<div class=\"operation\">";    
+	x += "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
+	x += "\n\t\t<legend><?php echo OPERATION_TO_PERFORM; ?></legend>";
+	x += "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\"><?php echo SEARCH; ?><br><span class=\"help\"><?php echo SEARCH_ASSIST; ?></span></label>";
+	x += "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
+	x += "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\"><?php echo POSITION; ?></label>";
+	x += "\n\t\t\t<select id=\"position_" + idx + "_" + idx2 + "\" name=\"position[" + idx + "][" + idx2 + "]\">";
+	x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
+	x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
+	x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+	x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
+	x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
+	x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
+	x += "\n\t\t\t</select>";
+	x += "\n\t\t\t<span class=\"help\"><?php echo POSITION_HELP; ?></span><br><br>";
+	x += "\n\t\t\t<label for=\"offset_" + idx + "_" + idx2 + "\"><?php echo OFFSET; ?><br><span class=\"help\"><?php echo OFFSET_ASSIST; ?></span></label>";
+	x += "\n\t\t\t<input id=\"offset_" + idx + "_" + idx2 + "\" name=\"offset[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;margin-bottom:10px;\"> <span class=\"help\"><?php echo OFFSET_HELP; ?></span><br><br>";
+	x += "\n\t\t\t<label for=\"index_" + idx + "_" + idx2 + "\"><?php echo INDEX; ?><br><span class=\"help\"><?php echo INDEX_ASSIST; ?></span></label>";
+	x += "\n\t\t\t<input id=\"index_" + idx + "_" + idx2 + "\" name=\"index[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:60px;margin-bottom:10px;\"> <span class=\"help\"><?php echo INDEX_HELP; ?></span><br><br>";
+	x += "\n\t\t\t<label for=\"error_" + idx + "_" + idx2 + "\"><?php echo ERROR; ?><br><span class=\"help\"><?php echo ERROR_ASSIST; ?></span></label>";
+	x += "\n\t\t\t<select id=\"error_" + idx + "_" + idx2 + "\" name=\"error[" + idx + "][" + idx2 + "]\">";
+	x += "\n\t\t\t\t<option value=\"abort\" selected=\"selected\"><?php echo ABORT_LOG; ?></option>";
+	x += "\n\t\t\t\t<option value=\"log\"><?php echo SKIP_LOG; ?></option>";
+	x += "\n\t\t\t\t<option value=\"skip\"><?php echo SKIP_NO_LOG; ?></option>";
+	x += "\n\t\t\t</select> <span class=\"help\"><?php echo ERROR_HELP; ?></span><br><br>";
+	x += "\n\t\t\t<label for=\"regex_" + idx + "_" + idx2 + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
+	x += "\n\t\t\t<select id=\"regex_" + idx + "_" + idx2 + "\" name=\"regex[" + idx + "][" + idx2 + "]\">";
+	x += "\n\t\t\t\t<option value=\"false\" selected=\"selected\"><?php echo ISFALSE; ?></option>";
+	x += "\n\t\t\t\t<option value=\"true\"><?php echo ISTRUE; ?></option>";
+	x += "\n\t\t\t</select>";
+	x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
+	x += "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
+	x += "\n\t\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
+	x += "\n\t\t\t<div class=\"delete\"><?php echo ADD; ?> <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
+	x += "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
+	x += "\n\t\t\t\t<option value=\"1\">1</option>";
+	x += "\n\t\t\t\t<option value=\"2\">2</option>";
+	x += "\n\t\t\t\t<option value=\"3\">3</option>";
+	x += "\n\t\t\t</select> <?php echo NEW_OPERATIONS; ?> <span class=\"gen\">[<?php echo NOW; ?>]</span></div>";
+	x += "\n\t\t</fieldset>";
+	x += "\n\t</div>";
+	x += "\n</div>";
+
 	$("#container").append(x);
 
-	$(".add1").click(function() {
-		idx = idx + 1;
-		idx2 = idx2 + 1;
+	$("#add1").click(function() {
+		idx ++;
+		idx2 ++;
 		
 		var x = "\n<div class=\"file\">";
-		x = x + "\n\t<fieldset id=\"filefieldset_" + idx + "\" class=\"fi\">";
-		x = x + "\n\t<legend>File to edit</legend>";
-		x = x + "\n\t\t<label for=\"file_" + idx + "\">Path to Filename:</label>";
-		x = x + "\n\t\t<input id=\"file_" + idx + "\" name=\"file[" + idx + "]\" type=\"text\" style=\"width:750px;\"><br><br>"; 
-		x = x + "\n\t\t<!-- <a onclick=\"idx = idx - 1; $(this).parent().parent().slideUp(function(){ $(this).remove() }); return false\"><span class=\"remove\">Remove</span></a> //-->";
-		x = x + "\n\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + idx + "\" name=\"remove_" + idx + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('#remove_" + idx + "').is(':checked')){ $('input[id^=remove_" + idx + "_]').attr('checked','checked').attr('disabled','disabled'); } else { $('input[id^=remove_" + idx + "_]').removeAttr('checked').removeAttr('disabled'); }\"></div>";
-		x = x + "\n\t</fieldset>";
-		x = x + "\n\t<div class=\"operation\">";    
-		x = x + "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
-		x = x + "\n\t\t<legend>Operation to perform</legend>";
-		x = x + "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\">Search:</label>";
-		x = x + "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;\"><br><br>";
-		x = x + "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\">Position:</label>";
-		x = x + "\n\t\t\t<select id=\"position_" + idx + "_" + idx2 + "\" name=\"position[" + idx + "][" + idx2 + "]\">";
-		x = x + "\n\t\t\t\t<option value=\"replace\" selected=\"selected\">replace</option>";
-		x = x + "\n\t\t\t\t<option value=\"before\">before</option>";
-		x = x + "\n\t\t\t\t<option value=\"after\">after</option>";
-		x = x + "\n\t\t\t\t<option value=\"top\">top</option>";
-		x = x + "\n\t\t\t\t<option value=\"bottom\">bottom</option>";
-		x = x + "\n\t\t\t\t<option value=\"all\">all</option>";
-		x = x + "\n\t\t\t</select>";
-		x = x + "\n\t\t\t<span class=\"help\">What to do with or where to place, the 'add' data in relation to the 'search' data</span><br><br>";
-		x = x + "\n\t\t\t<label for=\"offset_" + idx + "_" + idx2 + "\">Offset:</label>";
-		x = x + "\n\t\t\t<input id=\"offset_" + idx + "_" + idx2 + "\" name=\"offset[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;\"> <span class=\"help\">Single Integer ONLY (leave blank for none)</span><br><br>";
-		x = x + "\n\t\t\t<label for=\"index_" + idx + "_" + idx2 + "\">Index:</label>";
-		x = x + "\n\t\t\t<input id=\"index_" + idx + "_" + idx2 + "\" name=\"index[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;\"> <span class=\"help\">Single Integer or Comma Separated Integers Only (leave blank for none)</span><br><br>";
-		x = x + "\n\t\t\t<label for=\"error_" + idx + "_" + idx2 + "\">Error:</label>";
-		x = x + "\n\t\t\t<select id=\"error_" + idx + "_" + idx2 + "\" name=\"error[" + idx + "][" + idx2 + "]\">";
-		x = x + "\n\t\t\t\t<option value=\"abort\" selected=\"selected\">abort &amp; log</option>";
-		x = x + "\n\t\t\t\t<option value=\"log\">skip &amp; log</option>";
-		x = x + "\n\t\t\t\t<option value=\"skip\">skip don't log</option>";
-		x = x + "\n\t\t\t</select> <span class=\"help\">Abort and Log is default</span><br><br>";
-		x = x + "\n\t\t\t<label for=\"regex_" + idx + "_" + idx2 + "\">Regex:</label>";
-		x = x + "\n\t\t\t<select id=\"regex_" + idx + "_" + idx2 + "\" name=\"regex[" + idx + "][" + idx2 + "]\">";
-		x = x + "\n\t\t\t\t<option value=\"false\" selected=\"selected\">false</option>";
-		x = x + "\n\t\t\t\t<option value=\"true\">true</option>";
-		x = x + "\n\t\t\t</select>";
-		x = x + "\n\t\t\t<span class=\"help\">False is default - Switch to True to use regular expressions</span><br><br>";
-		x = x + "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
-		x = x + "\n\t\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
-		x = x + "\n\t\t\t<div class=\"delete\">Add <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
-		x = x + "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
-		x = x + "\n\t\t\t\t<option value=\"1\">1</option>";
-		x = x + "\n\t\t\t\t<option value=\"2\">2</option>";
-		x = x + "\n\t\t\t\t<option value=\"3\">3</option>";
-		x = x + "\n\t\t\t</select> new operation(s) after this one <span class=\"gen\">[Go]</span></div>";
-		x = x + "\n\t\t</fieldset>";
-		x = x + "\n\t</div>";
-		x = x + "\n</div>";
+		x += "\n\t<fieldset id=\"filefieldset_" + idx + "\" class=\"fi\">";
+		x += "\n\t<legend><?php echo FILE_TO_EDIT; ?></legend>";
+		x += "\n\t\t<label for=\"file_" + idx + "\"><?php echo PATH_TO_FILENAME; ?></label>";
+		x += "\n\t\t<input id=\"file_" + idx + "\" name=\"file[" + idx + "]\" type=\"text\" style=\"width:750px;\"><br><br>"; 
+		x += "\n\t\t<!-- <a onclick=\"idx = idx - 1; $(this).parent().parent().slideUp(function(){ $(this).remove() }); return false\"><span class=\"remove\">Remove</span></a> //-->";
+		x += "\n\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "\" name=\"remove_" + idx + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('#remove_" + idx + "').is(':checked')){ $('input[id^=remove_" + idx + "_]').attr('checked','checked').attr('disabled','disabled'); } else { $('input[id^=remove_" + idx + "_]').removeAttr('checked').removeAttr('disabled'); }\"></div>";
+		x += "\n\t</fieldset>";
+		x += "\n\t<div class=\"operation\">";    
+		x += "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
+		x += "\n\t\t<legend><?php echo OPERATION_TO_PERFORM; ?></legend>";
+		x += "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\"><?php echo SEARCH; ?><br><span class=\"help\"><?php echo SEARCH_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
+		x += "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\"><?php echo POSITION; ?></label>";
+		x += "\n\t\t\t<select id=\"position_" + idx + "_" + idx2 + "\" name=\"position[" + idx + "][" + idx2 + "]\">";
+		x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+		x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
+		x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
+		x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
+		x += "\n\t\t\t</select>";
+		x += "\n\t\t\t<span class=\"help\"><?php echo POSITION_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<label for=\"offset_" + idx + "_" + idx2 + "\"><?php echo OFFSET; ?><br><span class=\"help\"><?php echo OFFSET_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"offset_" + idx + "_" + idx2 + "\" name=\"offset[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;margin-bottom:10px;\"> <span class=\"help\"><?php echo OFFSET_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<label for=\"index_" + idx + "_" + idx2 + "\"><?php echo INDEX; ?><br><span class=\"help\"><?php echo INDEX_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<input id=\"index_" + idx + "_" + idx2 + "\" name=\"index[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:60px;margin-bottom:10px;\"> <span class=\"help\"><?php echo INDEX_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<label for=\"error_" + idx + "_" + idx2 + "\"><?php echo ERROR; ?><br><span class=\"help\"><?php echo ERROR_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<select id=\"error_" + idx + "_" + idx2 + "\" name=\"error[" + idx + "][" + idx2 + "]\">";
+
+		x += "\n\t\t\t\t<option value=\"abort\" selected=\"selected\"><?php echo ABORT_LOG; ?></option>";
+		x += "\n\t\t\t\t<option value=\"log\"><?php echo SKIP_LOG; ?></option>";
+		x += "\n\t\t\t\t<option value=\"skip\"><?php echo SKIP_NO_LOG; ?></option>";
+		x += "\n\t\t\t</select> <span class=\"help\"><?php echo ERROR_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<label for=\"regex_" + idx + "_" + idx2 + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
+		x += "\n\t\t\t<select id=\"regex_" + idx + "_" + idx2 + "\" name=\"regex[" + idx + "][" + idx2 + "]\">";
+		x += "\n\t\t\t\t<option value=\"false\" selected=\"selected\"><?php echo ISFALSE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"true\"><?php echo ISTRUE; ?></option>";
+		x += "\n\t\t\t</select>";
+		x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
+		x += "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
+		x += "\n\t\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
+		x += "\n\t\t\t<div class=\"delete\"><?php echo ADD; ?> <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
+		x += "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
+		x += "\n\t\t\t\t<option value=\"1\">1</option>";
+		x += "\n\t\t\t\t<option value=\"2\">2</option>";
+		x += "\n\t\t\t\t<option value=\"3\">3</option>";
+		x += "\n\t\t\t</select> <?php echo NEW_OPERATIONS; ?> <span class=\"gen\">[<?php echo NOW; ?>]</span></div>";
+		x += "\n\t\t</fieldset>";
+		x += "\n\t</div>";
+		x += "\n</div>";
 		
 		$("#container").append(x);
 		var $elem = $('body');
 		$('html, body').animate({scrollTop: $elem.height()}, 800);
 	});
 	
-	$(".add2").click(function() {
+	$("#add2").click(function() {
 		if($('#remove_' + idx ).is(':checked')){
-			alert('Please clear the \'Remove on Generate\' checkbox for this file, if you wish to add a new operation to it.\n\nAlternatively, you can add a new file to edit.');
+			alert('<?php echo CLEAR_REMOVE_ON_GENERATE; ?>');
 		}else{
-			idx = idx;
-			idx2 = idx2 + 1;
+			idx2 ++;
 			
 			var x = "\n\t<div class=\"operation\">";    
-			x = x + "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
-			x = x + "\n\t\t<legend>Operation to perform</legend>";
-			x = x + "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\">Search:</label>";
-			x = x + "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;\"><br><br>";
-			x = x + "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\">Position:</label>";
-			x = x + "\n\t\t\t<select id=\"position_" + idx + "_" + idx2 + "\" name=\"position[" + idx + "][" + idx2 + "]\">";
-			x = x + "\n\t\t\t\t<option value=\"replace\" selected=\"selected\">replace</option>";
-			x = x + "\n\t\t\t\t<option value=\"before\">before</option>";
-			x = x + "\n\t\t\t\t<option value=\"after\">after</option>";
-			x = x + "\n\t\t\t\t<option value=\"top\">top</option>";
-			x = x + "\n\t\t\t\t<option value=\"bottom\">bottom</option>";
-			x = x + "\n\t\t\t\t<option value=\"all\">all</option>";
-			x = x + "\n\t\t\t</select>";
-			x = x + "\n\t\t\t<span class=\"help\">What to do with or where to place, the 'add' data in relation to the 'search' data</span><br><br>";
-			x = x + "\n\t\t\t<label for=\"offset_" + idx + "_" + idx2 + "\">Offset:</label>";
-			x = x + "\n\t\t\t<input id=\"offset_" + idx + "_" + idx2 + "\" name=\"offset[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;\"> <span class=\"help\">Single Integer ONLY (leave blank for none)</span><br><br>";
-			x = x + "\n\t\t\t<label for=\"index_" + idx + "_" + idx2 + "\">Index:</label>";
-			x = x + "\n\t\t\t<input id=\"index_" + idx + "_" + idx2 + "\" name=\"index[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;\"> <span class=\"help\">Single Integer or Comma Separated Integers Only (leave blank for none)</span><br><br>";
-			x = x + "\n\t\t\t<label for=\"error_" + idx + "_" + idx2 + "\">Error:</label>";
-			x = x + "\n\t\t\t<select id=\"error_" + idx + "_" + idx2 + "\" name=\"error[" + idx + "][" + idx2 + "]\">";
-			x = x + "\n\t\t\t\t<option value=\"abort\" selected=\"selected\">abort &amp; log</option>";
-			x = x + "\n\t\t\t\t<option value=\"log\">skip &amp; log</option>";
-			x = x + "\n\t\t\t\t<option value=\"skip\">skip don't log</option>";
-			x = x + "\n\t\t\t</select> <span class=\"help\">Abort and Log is default</span><br><br>";
-			x = x + "\n\t\t\t<label for=\"regex_" + idx + "_" + idx2 + "\">Regex:</label>";
-			x = x + "\n\t\t\t<select id=\"regex_" + idx + "_" + idx2 + "\" name=\"regex[" + idx + "][" + idx2 + "]\">";
-			x = x + "\n\t\t\t\t<option value=\"false\" selected=\"selected\">false</option>";
-			x = x + "\n\t\t\t\t<option value=\"true\">true</option>";
-			x = x + "\n\t\t\t</select>";
-			x = x + "\n\t\t\t<span class=\"help\">False is default - Switch to True to use regular expressions</span><br><br>";
-			x = x + "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
-			x = x + "\n\t\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
-			x = x + "\n\t\t\t<div class=\"delete\">Add <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
-			x = x + "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
-			x = x + "\n\t\t\t\t<option value=\"1\">1</option>";
-			x = x + "\n\t\t\t\t<option value=\"2\">2</option>";
-			x = x + "\n\t\t\t\t<option value=\"3\">3</option>";
-			x = x + "\n\t\t\t</select> new operation(s) after this one <span class=\"gen\">[Go]</span></div>";
-			x = x + "\n\t\t</fieldset>";
-			x = x + "\n\t</div>";
+			x += "\n\t\t<fieldset id=\"operationfieldset_" + idx + "_" + idx2 + "\" class=\"op\">";
+			x += "\n\t\t<legend><?php echo OPERATION_TO_PERFORM; ?></legend>";
+			x += "\n\t\t\t<label for=\"search_" + idx + "_" + idx2 + "\"><?php echo SEARCH; ?><br><span class=\"help\"><?php echo SEARCH_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<input id=\"search_" + idx + "_" + idx2 + "\" name=\"search[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\"><br><br>";
+			x += "\n\t\t\t<label for=\"position_" + idx + "_" + idx2 + "\"><?php echo POSITION; ?></label>";
+			x += "\n\t\t\t<select id=\"position_" + idx + "_" + idx2 + "\" name=\"position[" + idx + "][" + idx2 + "]\">";
+			x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
+			x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
+			x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+			x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
+			x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
+			x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
+			x += "\n\t\t\t</select>";
+			x += "\n\t\t\t<span class=\"help\"><?php echo POSITION_HELP; ?></span><br><br>";
+			x += "\n\t\t\t<label for=\"offset_" + idx + "_" + idx2 + "\"><?php echo OFFSET; ?><br><span class=\"help\"><?php echo OFFSET_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<input id=\"offset_" + idx + "_" + idx2 + "\" name=\"offset[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:40px;margin-bottom:10px;\"> <span class=\"help\"><?php echo OFFSET_HELP; ?></span><br><br>";
+			x += "\n\t\t\t<label for=\"index_" + idx + "_" + idx2 + "\"><?php echo INDEX; ?><br><span class=\"help\"><?php echo INDEX_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<input id=\"index_" + idx + "_" + idx2 + "\" name=\"index[" + idx + "][" + idx2 + "]\" type=\"text\" style=\"width:60px;margin-bottom:10px;\"> <span class=\"help\"><?php echo INDEX_HELP; ?></span><br><br>";
+			x += "\n\t\t\t<label for=\"error_" + idx + "_" + idx2 + "\"><?php echo ERROR; ?><br><span class=\"help\"><?php echo ERROR_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<select id=\"error_" + idx + "_" + idx2 + "\" name=\"error[" + idx + "][" + idx2 + "]\">";
+			x += "\n\t\t\t\t<option value=\"abort\" selected=\"selected\"><?php echo ABORT_LOG; ?></option>";
+			x += "\n\t\t\t\t<option value=\"log\"><?php echo SKIP_LOG; ?></option>";
+			x += "\n\t\t\t\t<option value=\"skip\"><?php echo SKIP_NO_LOG; ?></option>";
+			x += "\n\t\t\t</select> <span class=\"help\"><?php echo ERROR_HELP; ?></span><br><br>";
+			x += "\n\t\t\t<label for=\"regex_" + idx + "_" + idx2 + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
+			x += "\n\t\t\t<select id=\"regex_" + idx + "_" + idx2 + "\" name=\"regex[" + idx + "][" + idx2 + "]\">";
+			x += "\n\t\t\t\t<option value=\"false\" selected=\"selected\"><?php echo ISFALSE; ?></option>";
+			x += "\n\t\t\t\t<option value=\"true\"><?php echo ISTRUE; ?></option>";
+			x += "\n\t\t\t</select>";
+			x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
+			x += "\n\t\t\t<textarea id=\"add_" + idx + "_" + idx2 + "\" name=\"add[" + idx + "][" + idx2 + "]\" style=\"width:940px;height:240px;\"></textarea><br><br>";
+			x += "\n\t\t\t<div class=\"delete\"><?php echo REMOVE_ON_GENERATE; ?> <input id=\"remove_" + idx + "_" + idx2 + "\" name=\"remove_" + idx + "_" + idx2 + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + idx + "_]').not(':checked').length===0){ $('#remove_" + idx + "').attr('checked','checked'); $('input[id^=remove_" + idx + "_]').attr('disabled','disabled'); }\"></div>";
+			x += "\n\t\t\t<div class=\"delete\"><?php echo ADD; ?> <select id=\"newop_" + idx + "_" + idx2 + "\" name=\"newop[" + idx + "][" + idx2 + "]\">";
+			x += "\n\t\t\t\t<option value=\"0\" selected=\"selected\">0</option>";
+			x += "\n\t\t\t\t<option value=\"1\">1</option>";
+			x += "\n\t\t\t\t<option value=\"2\">2</option>";
+			x += "\n\t\t\t\t<option value=\"3\">3</option>";
+			x += "\n\t\t\t</select> <?php echo NEW_OPERATIONS; ?> <span class=\"gen\">[<?php echo NOW; ?>]</span></div>";
+			x += "\n\t\t</fieldset>";
+			x += "\n\t</div>";
 			
 			$(".file:last").append(x);
 			
@@ -571,7 +615,7 @@ $(function() {
 		}
 	});
 
-	$(".add").click(function() {
+	$("#add").click(function() {
 		location.href='./';
 	});
 	$(".gen").bind('click', function() {
@@ -586,24 +630,12 @@ $(function() {
 <script src="js/jquery.tabSlideOut.v1.3.js"></script>
 <script>
 $(function(){
-	$('.slide-out-div').tabSlideOut({
-		tabHandle: '.handle',                              //class of the element that will be your tab
-		pathToTabImage: './images/files_top_tab.png',          //path to the image for the tab (optionaly can be set using css)
-		imageHeight: '34px',                               //height of tab image
-		imageWidth: '133px',                               //width of tab image    
-		tabLocation: 'top',                               //side of screen where tab lives, top, right, bottom, or left
-		speed: 300,                                        //speed of animation
-		action: 'click',                                   //options: 'click' or 'hover', action to trigger animation
-		topPos: '0px',                                   //position from the top
-		leftPos: '337px',                                   //position from the left
-		fixedPosition: false                               //options: true makes it stick(fixed position) on scroll
-	});
+	$('.slide-out-div3').tabSlideOut({
+		tabHandle: '.handle3',                              //class of the element that will be your tab
 
-	$('.slide-out-div2').tabSlideOut({
-		tabHandle: '.handle2',                              //class of the element that will be your tab
-		pathToTabImage: './images/log_top_tab.png',          //path to the image for the tab (optionaly can be set using css)
-		imageHeight: '34px',                               //height of tab image
-		imageWidth: '125px',                               //width of tab image    
+		pathToTabImage: './images/cache_top_tab.png',          //path to the image for the tab (optionaly can be set using css)
+		imageHeight: '32px',                               //height of tab image
+		imageWidth: '142px',                               //width of tab image    
 		tabLocation: 'top',                               //side of screen where tab lives, top, right, bottom, or left
 		speed: 300,                                        //speed of animation
 		action: 'click',                                   //options: 'click' or 'hover', action to trigger animation
@@ -611,13 +643,41 @@ $(function(){
 		leftPos: '0px',                                   //position from the left
 		fixedPosition: false                               //options: true makes it stick(fixed position) on scroll
 	});
+
+	$('.slide-out-div2').tabSlideOut({
+		tabHandle: '.handle2',                              //class of the element that will be your tab
+		pathToTabImage: './images/logs_top_tab.png',          //path to the image for the tab (optionaly can be set using css)
+		imageHeight: '32px',                               //height of tab image
+		imageWidth: '142px',                               //width of tab image    
+		tabLocation: 'top',                               //side of screen where tab lives, top, right, bottom, or left
+		speed: 300,                                        //speed of animation
+		action: 'click',                                   //options: 'click' or 'hover', action to trigger animation
+		topPos: '0px',                                   //position from the top
+		leftPos: '0px',                                   //position from the left
+		fixedPosition: false                               //options: true makes it stick(fixed position) on scroll
+	});
+
+	$('.slide-out-div').tabSlideOut({
+		tabHandle: '.handle',                              //class of the element that will be your tab
+
+
+		pathToTabImage: './images/files_top_tab.png',          //path to the image for the tab (optionaly can be set using css)
+		imageHeight: '32px',                               //height of tab image
+		imageWidth: '142px',                               //width of tab image    
+		tabLocation: 'top',                               //side of screen where tab lives, top, right, bottom, or left
+		speed: 300,                                        //speed of animation
+		action: 'click',                                   //options: 'click' or 'hover', action to trigger animation
+		topPos: '0px',                                   //position from the top
+		leftPos: '50px',                                   //position from the left
+		fixedPosition: false                               //options: true makes it stick(fixed position) on scroll
+	});
 	
 	$("textarea").tabby();
 	
-<?php if(file_exists(LOG)&&filesize(LOG)>1&&filesize(LOG)<((LOGMAX*1048576)+1)){ ?>
+<?php if(current_log_file(LOG)!=''&&filesize(LOG . current_log_file(LOG))>1&&filesize(LOG . current_log_file(LOG))<((LOGMAX*1048576)+1)){ ?>
 	$('.handle2').click(function() {
 		$.ajax({
-			url : "logfile.php?log=<?php echo LOG; ?>",
+			url : "logfile.php?log=<?php echo LOG . current_log_file(LOG); ?>",
 			dataType: "json",
 			success: function(data){
 				$("#log").val(data);
@@ -625,6 +685,32 @@ $(function(){
 		});
 	});
 <?php } ?>
+
+	$('.handle3').click(function() {
+		$.ajax({
+			url : "vqcachefile.php?cachefile=<?php echo (isset($_GET['vqcachefile'])&&$_GET['vqcachefile']=='mods.cache'?MODSCACHE:CACHE . $_GET['vqcachefile']); ?>",
+			dataType: "json",
+			success: function(data){
+				$("#cache").val(data);
+			}
+		});
+	});
+	
+	$('#add3').click(function() {
+		location.href = '<?php echo './?enable=' .$_GET['file']; ?>';
+	});
+	
+	$('#file_list').change(function() {
+		location.href = './?vqcachefile=' + $(this).val();
+	});
+	
+<?php if(isset($_GET['handle1'])){ ?>
+	$('.handle').trigger('click');
+<?php }elseif(isset($_GET['handle2'])){ ?>
+	$('.handle2').trigger('click');
+<?php }elseif(isset($_GET['vqcachefile'])||isset($_GET['cleared'])){ ?>
+	$('.handle3').trigger('click');
+<?php } ?>	
 });
 </script>
 </body>
