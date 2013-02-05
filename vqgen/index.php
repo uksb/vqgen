@@ -1,6 +1,6 @@
 <?php
 /**
- * vQmod XML Generator v3.2.0
+ * vQmod XML Generator v3.2.1
  * 
  * Generate XML files for use with vQmod.
  * Built-in File Manager and Log Viewer.
@@ -9,7 +9,7 @@
  * 
  * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
  * @copyright Copyright (c) 2013, UK Site Builder Ltd
- * @version $Id: index.php, v3.2.0 2013-02-02 01:30:00 sp Exp $
+ * @version $Id: index.php, v3.2.1 2013-02-05 22:30:00 sp Exp $
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
  */
 
@@ -262,6 +262,9 @@ foreach($data as $f){ ?>
 	<?php 
 	foreach($f['value'] as $op){
 	$arkey=0;
+	// Check to see if IGNOREIF exists /Backwards comaptibility
+	$add = ($op['value'][1]['tag']=='add'?1:2);
+	$igif = ($op['value'][1]['tag']=='ignoreif'?1:2);
 	?>
 		x += "\n\t<div class=\"operation\">";    
 		x += "\n\t\t<fieldset id=\"operationfieldset_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" class=\"op\">";
@@ -296,13 +299,13 @@ foreach($data as $f){ ?>
 		x += "\n\t\t\t\t<option value=\"true\"<?php if($op['value'][$arkey]['attributes']['regex']=='true'){ ?> selected=\"selected\"<?php } ?>><?php echo ISTRUE; ?></option>";
 		x += "\n\t\t\t</select>";
 		x += "\n\t\t\t<span class=\"help\"><?php echo REGEX_HELP; ?></span><br><br>";
-		x += "\n\t\t\t<textarea id=\"add_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"add[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" style=\"width:940px;height:240px;\"><?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][$arkey+2]['value']), ENT_QUOTES, 'UTF-8')); ?></textarea><br><br>";
+		x += "\n\t\t\t<textarea id=\"add_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"add[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" style=\"width:940px;height:240px;\"><?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][$arkey+$add]['value']), ENT_QUOTES, 'UTF-8')); ?></textarea><br><br>";
 		x += "\n\t\t\t<label for=\"ignoreif_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo IGNOREIF; ?><br><span class=\"help\"><?php echo IGNOREIF_ASSIST; ?></span></label>";
-		x += "\n\t\t\t<input id=\"ignoreif_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"ignoreif[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\" value=\"<?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][$arkey+1]['value']), ENT_QUOTES, 'UTF-8')); ?>\"><br><br>";
+		x += "\n\t\t\t<input id=\"ignoreif_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"ignoreif[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\" type=\"text\" style=\"width:750px;margin-bottom:10px;\" value=\"<?php echo preg_replace("/\r?\n/", "\\n", htmlentities(addslashes($op['value'][$arkey+$igif]['value']), ENT_QUOTES, 'UTF-8')); ?>\"><br><br>";
 		x += "\n\t\t\t<label for=\"regex_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\"><?php echo REGEX; ?><br><span class=\"help\"><?php echo REGEX_ASSIST; ?></span></label>";
 		x += "\n\t\t\t<select id=\"igregex_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"igregex[" + <?php echo $idx; ?> + "][" + <?php echo $idx2; ?> + "]\">";
-		x += "\n\t\t\t\t<option value=\"false\"<?php if(!isset($op['value'][$arkey+1]['attributes']['regex'])){ ?> selected=\"selected\"<?php } ?>><?php echo ISFALSE; ?></option>";
-		x += "\n\t\t\t\t<option value=\"true\"<?php if($op['value'][$arkey+1]['attributes']['regex']=='true'){ ?> selected=\"selected\"<?php } ?>><?php echo ISTRUE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"false\"<?php if(!isset($op['value'][$arkey+$igif]['attributes']['regex'])){ ?> selected=\"selected\"<?php } ?>><?php echo ISFALSE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"true\"<?php if($op['value'][$arkey+$igif]['attributes']['regex']=='true'){ ?> selected=\"selected\"<?php } ?>><?php echo ISTRUE; ?></option>";
 		x += "\n\t\t\t</select>";
 		x += "\n\t\t\t<span class=\"help\"><?php echo IGREGEX_HELP; ?></span><br><br>";
 		x += "\n\t\t\t<div class=\"delete\">Remove on Generate <input id=\"remove_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" name=\"remove_" + <?php echo $idx; ?> + "_" + <?php echo $idx2; ?> + "\" type=\"checkbox\" value=\"1\" onclick=\"if($('input[id^=remove_" + <?php echo $idx; ?> + "_]').not(':checked').length===0){ $('#remove_" + <?php echo $idx; ?> + "').attr('checked','checked'); $('input[id^=remove_" + <?php echo $idx; ?> + "_]').attr('disabled','disabled'); }\"></div>";
