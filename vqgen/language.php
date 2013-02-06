@@ -132,6 +132,7 @@ define('CLEAR_REMOVE_ON_GENERATE', "Please clear the \'Remove on Generate\' chec
 
 // Messages
 define('FILE_GENERATED', 'File Generated Successfully at ');
+define('CONTENT', 'Content');
 define('LOADING', 'Loading...');
 define('DONATE', 'If you find this tool useful, please buy me a beer or two :-)');
 define('CLEARED_MODSCACHE', 'The mods.cache file has been cleared!');
@@ -144,3 +145,4 @@ define('VQMOD_FILE_DISABLED', 'vqmod/xml/%s has been disabled!');
 define('VQMOD_FILES_DISABLED', 'All vqmod/xml files have been disabled!');
 define('VQMOD_FILE_ENABLED', 'vqmod/xml/%s has been enabled!');
 define('VQMOD_FILES_ENABLED', 'All vqmod/xml files have been enabled!');
+define('NEWSERROR', '<span style="color:red;font-weight:bold;">UKSB News could not be loaded.</span><br><br><b>Possible causes:</b><ul><li style="margin:6px;0;">You edited the index.php NEWS define with a malformed RSS feed URL.</li><li style="margin:6px;0;">UKSB forgot to update the News feed.</li><li style="margin:6px;0;">The UKSB server is down. Someone forgot to plug it in.</li><li style="margin:6px;0;">You do not have an internet connection.</li></ul>');

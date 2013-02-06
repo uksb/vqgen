@@ -20,7 +20,7 @@ define('LOGMAX', 10); // max viewale size in MB of log file
 define('PATH', '../vqmod/xml/'); // relative path to the vqmod xml folder
 define('CACHE', '../vqmod/vqcache/'); // relative path to the vqmod cache folder
 define('MODSCACHE', '../vqmod/mods.cache'); // relative path to the vqmod mods.cache file
-define('NEWS', ''); // URL to an RSS feed to use in the News tab in place of the default UKSB News - ie. http://www.opencart.com/index.php?route=feature/blog/rss
+define('NEWS', ''); // Leave blank for UKSB News - Or add a URL to an RSS feed to use in the News tab in place of the default UKSB News - ie. http://www.opencart.com/index.php?route=feature/blog/rss
 
 if(isset($_POST['login'])){
 	if($_POST['password']==PASSWORD){
@@ -164,7 +164,7 @@ if(!isset($_POST['generatexml'])&&!isset($_GET['file'])){
 ?>
 
 <div class="slide-out-div3">
-<a class="handle3" href="#">Content</a>
+<a class="handle3" href="#"><?php echo CONTENT; ?></a>
 <h3><?php echo VQMOD_CACHE_FILES; ?></h3> <a href="./?clearvqcache=1"><?php echo CLEAR_VQMOD_CACHE; ?></a> <a href="./?clearmodscache=1"><?php echo CLEAR_MODS_CACHE; ?></a><br><br>
 <?php if(isset($_GET['cleared'])&&$_GET['cleared']=='modscache'){ ?><span class="message"><?php echo CLEARED_MODSCACHE; ?></span><br><br><?php } ?>
 <?php if(isset($_GET['cleared'])&&$_GET['cleared']=='vqcache'){ ?><span class="message"><?php echo CLEARED_VQCACHE; ?></span><br><br><?php } ?>
@@ -187,7 +187,7 @@ if(!isset($_POST['generatexml'])&&!isset($_GET['file'])){
 </div>
 
 <div class="slide-out-div2">
-<a class="handle2" href="#">Content</a>
+<a class="handle2" href="#"><?php echo CONTENT; ?></a>
 <h3><?php echo VQMOD_LOG_FILES; ?></h3> <a href="./?clearlogs=1"><?php echo CLEAR_VQMOD_LOGS; ?></a> <a href="./?clearlog=1"><?php echo CLEAR_THIS_LOG; ?></a><br><br>
 <?php if(isset($_GET['handle2'])&&$_GET['handle2']=='alllogs'){ ?><span class="message"><?php echo CLEARED_ALL_LOGS; ?></span><br><br><?php } ?>
 <?php if(isset($_GET['handle2'])&&$_GET['handle2']!='alllogs'){ ?><span class="message"><?php echo sprintf(CLEARED_LOG_FILE, $_GET['handle2']); ?></span><br><br><?php } ?>
@@ -195,10 +195,10 @@ if(!isset($_POST['generatexml'])&&!isset($_GET['file'])){
 </div>
 
 <div class="slide-out-div">
-<a class="handle" href="#">Content</a>
+<a class="handle" href="#"><?php echo CONTENT; ?></a>
 <?php if(isset($_GET['handle1'])&&substr($_GET['handle1'], 0, 7)=='deleted'){ ?><span class="message"><?php echo sprintf(VQMOD_FILE_DELETED, substr($_GET['handle1'], 8, (strlen($_GET['handle1'])-8))); ?></span><br><br><?php } 
 elseif(isset($_GET['handle1'])&&$_GET['handle1']=='enabledall'){ ?><span class="message"><?php echo VQMOD_FILES_ENABLED; ?></span><br><br><?php }
-elseif(isset($_GET['handle1'])&&substr($_GET['handle1'], 0, 7)=='enabled'){ ?><span class="message"><?php echo sprintf(VQMOD_FILE_ENABLED, substr($_GET['handle1'], 8, (strlen($_GET['handle1'])-8))); ?></span><br><br><?php } 
+elseif(isset($_GET['handle1'])&&substr($_GET['handle1'], 0, 7)=='enabled'){ ?><span class="message"><?php echo sprintf(VQMOD_FILE_ENABLED, rtrim(substr($_GET['handle1'], 8, (strlen($_GET['handle1'])-8)),'_')); ?></span><br><br><?php } 
 elseif(isset($_GET['handle1'])&&$_GET['handle1']=='disabledall'){ ?><span class="message"><?php echo VQMOD_FILES_DISABLED; ?></span><br><br><?php }
 elseif(isset($_GET['handle1'])&&substr($_GET['handle1'], 0, 8)=='disabled'){ ?><span class="message"><?php echo sprintf(VQMOD_FILE_DISABLED, substr($_GET['handle1'], 9, (strlen($_GET['handle1'])-9))); ?></span><br><br><?php } ?>
 <?php
@@ -262,8 +262,8 @@ if(isset($activevqmods)&&count($activevqmods)>0){
 </div>
 
 <div class="news">
-<a class="handlenews" href="#">Content</a>
-<div id="news">Loading...</div>
+<a class="handlenews" href="#"><?php echo CONTENT; ?></a>
+<div id="news"><?php echo LOADING; ?></div>
 </div>
 
 <div id="footer">&copy; Copyright <?php echo (date("Y")>2011?'2011 - ':'') . date("Y"); ?> <a href="http://www.uksitebuilder.net/">UK Site Builder Ltd</a> - Get More Great vQmod Extensions at <a href="http://www.opencart-extensions.co.uk/">OpenCart-Extensions.co.uk</a><br><a href="http://uksb.github.com/vqgen/" >vQmod Generator by UK Site Builder Ltd</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a></div>
@@ -820,7 +820,7 @@ $(function(){
 	});
 	
 	$('.handlenews').click(function() {
-		$('#news').rssfeed('<?php echo (NEWS==""?"http://www.opencart-extensions.co.uk/news/feed.rss":NEWS); ?>',{dateformat: 'MMMM yyyy',errormsg: '<span style="color:red;font-weight:bold;">UKSB News could not be loaded.</span><br><br><b>Possible causes:</b><ul><li style="margin:6px;0;">You edited the index.php NEWS define with a malformed RSS feed URL.</li><li style="margin:6px;0;">UKSB forgot to update the News feed.</li><li style="margin:6px;0;">The UKSB server is down. Someone forgot to plug it in.</li><li style="margin:6px;0;">You do not have an internet connection.</li></ul>', linktarget: '_blank'}, function(e) {
+		$('#news').rssfeed('<?php echo (NEWS==""?"http://www.opencart-extensions.co.uk/news/feed.rss":NEWS); ?>',{dateformat: 'MMMM yyyy',errormsg: '<?php echo NEWSERROR; ?>', linktarget: '_blank'}, function(e) {
 			$(e).find('div.rssBody').vTicker({ showItems: 3});
 			$('h4 a',e).each(function(i) {
 
