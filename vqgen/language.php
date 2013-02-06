@@ -15,7 +15,7 @@
 
 // General
 define('PACKAGE_NAME', 'vQmod XML File Generator');
-define('OPENING_STATEMENT', '<p>First of all you need to install vQmod version 2.2.x if you haven\'t got it already.</p><p>For more info on vQmod and what it does visit <a href="http://www.vqmod.com/">vQmod.com</a></p>');
+define('OPENING_STATEMENT', '<p>First of all you need to install vQmod version 2.3.x if you haven\'t got it already.</p><p>For more info on vQmod and what it does visit <a href="http://www.vqmod.com/">vQmod.com</a></p>');
 define('FILL_OUT_FORM', 'Fill out the form below with your file edits');
 define('LOGIN', 'Login');
 define('LOGINFAIL', 'Incorrect Login - Please Try Again!');
