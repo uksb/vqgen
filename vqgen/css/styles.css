@@ -14,7 +14,8 @@
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
  */
 
-body{font:80%/1 Verdana, Geneva, sans-serif;}
+body{font:80%/1 Verdana, Geneva, sans-serif;margin:0;padding:0;}
+h1{margin-top:30px;}
 img{border:none;}
 .ma {border:1px solid green;-webkit-border-radius:7px 7px 7px 7px;-moz-border-radius:7px 7px 7px 7px;-khtml-border-radius:7px 7px 7px 7px;border-radius:7px 7px 7px 7px;-webkit-box-shadow:0px 2px 2px #DDDDDD;-moz-box-shadow:0px 2px 2px #DDDDDD;box-shadow:0px 2px 2px #DDDDDD; width:950px;background-color:#F2F2FF;margin-top:10px;}
 .fi {border:1px solid green;-webkit-border-radius:7px 7px 7px 7px;-moz-border-radius:7px 7px 7px 7px;-khtml-border-radius:7px 7px 7px 7px;border-radius:7px 7px 7px 7px;-webkit-box-shadow:0px 2px 2px #DDDDDD;-moz-box-shadow:0px 2px 2px #DDDDDD;box-shadow:0px 2px 2px #DDDDDD; width:950px;background-color:#F4FFF5;margin-top:10px;}
@@ -42,10 +43,10 @@ input#add.button:hover {background:#AC1B11;background:-moz-linear-gradient(top, 
 span.help{font-size:0.8em;color:#666;}
 .delete{text-align:right; color:red; font-size:0.8em;}
 textarea{background:#fff url('../images/add.png') no-repeat;border:1px solid #ccc;}
-.slide-out-div{padding:20px;width:600px;background:#efefef;border:green 1px solid;color:#000000;}
-.slide-out-div2{padding:20px;width:794px;background:#efefef;border:green 1px solid;color:#000000;}
+.slide-out-div{padding:40px 20px 20px 20px;width:600px;background:#efefef;border:green 1px solid;color:#000000;}
+.slide-out-div2{padding:40px 20px 20px 20px;width:794px;background:#efefef;border:green 1px solid;color:#000000;}
 .slide-out-div2 h3, .slide-out-div3 h3{display:inline;}
-.slide-out-div3{padding:20px;width:938px;background:#efefef;border:green 1px solid;color:#000000;}
+.slide-out-div3{padding:40px 20px 20px 20px;width:938px;background:#efefef;border:green 1px solid;color:#000000;}
 .news{padding:20px;width:506px;height:320px;background:#efefef;border:green 1px solid;color:#000000;}
 #log, #cache{background:#000000;color:#CF3;width:784px;height:600px;padding:5px;border:1px solid #CF3;overflow-y:scroll;}
 #cache{width:928px;}

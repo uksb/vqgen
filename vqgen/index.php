@@ -20,7 +20,7 @@ define('LOGMAX', 10); // max viewale size in MB of log file
 define('PATH', '../vqmod/xml/'); // relative path to the vqmod xml folder
 define('CACHE', '../vqmod/vqcache/'); // relative path to the vqmod cache folder
 define('MODSCACHE', '../vqmod/mods.cache'); // relative path to the vqmod mods.cache file
-define('NEWS', ''); // Leave blank for UKSB News - Or add a URL to an RSS feed to use in the News tab in place of the default UKSB News - ie. http://www.opencart.com/index.php?route=feature/blog/rss
+define('NEWS', 'http://www.opencart.com/index.php?route=feature/blog/rss'); // Leave blank for UKSB News - Or add a URL to an RSS feed to use in the News tab in place of the default UKSB News - ie. http://www.opencart.com/index.php?route=feature/blog/rss
 
 if(isset($_POST['login'])){
 	if($_POST['password']==PASSWORD){
@@ -68,7 +68,9 @@ if(!isset($_COOKIE['vqgenlogged'])&&PASSWORD!=''){
 </fieldset>
 </form>
 </div>
-<?php } else {
+<?php } else { ?>
+<div class="ui-layout-center">
+<?php
 if(isset($_GET['generated'])){
 ?>
 <p class="generate"><?php echo FILE_GENERATED . date("G:i"); ?></p>
@@ -267,11 +269,7 @@ if(isset($activevqmods)&&count($activevqmods)>0){
 </div>
 
 <div id="footer">&copy; Copyright <?php echo (date("Y")>2011?'2011 - ':'') . date("Y"); ?> <a href="http://www.uksitebuilder.net/">UK Site Builder Ltd</a> - Get More Great vQmod Extensions at <a href="http://www.opencart-extensions.co.uk/">OpenCart-Extensions.co.uk</a><br><a href="http://uksb.github.com/vqgen/" >vQmod Generator by UK Site Builder Ltd</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a></div>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.min.js"></script>
-<script>
-	// Fallback to loading jQuery from a local path if the CDN is unavailable
-	(window.jQuery || document.write('<script src="/js/jquery-1.9.0.min.js"><\/script>'));
-</script>
+<script src="js/jquery-1.9.0.min.js"></script>
 <?php 
 if(isset($_GET['file'])){
 ?>
@@ -730,15 +728,35 @@ $(function() {
 <?php
 }
 ?>
-<script src="js/jquery.textarea.js"></script>
+</div>
+<div class="ui-layout-east">East</div>
+<script src="js/jquery-ui-latest.js"></script>
+<script src="js/jquery.layout-latest.js"></script>
 <script src="js/jquery.tabSlideOut.v1.3.js"></script>
 <script src="js/jquery.zrssfeed.min.js"></script>
 <script src="js/jquery.vticker.js"></script>
+<script src="js/jquery.textarea.js"></script>
 <script>
+var myLayout;
 $(function(){
-	$('.slide-out-div3').tabSlideOut({
+	myLayout = $('body').layout({
+		
+		applyDemoStyles: true,
+		initClosed: true,
+		initHidden: true,
+		east__slidable: false,
+		east__resizable: false,
+		east__size:$(document).width()-1000,
+		east__minSize:$(document).width()-1000,
+		east__maxSize:$(document).width()-1000,
+		//east__resizerTip: 'Drag to Resize!',
+		east__fxName: 'slide',
+		east__fxSpeed: 'fast'
+		
+	});
+ 
+ 	$('.slide-out-div3').tabSlideOut({
 		tabHandle: '.handle3',                              //class of the element that will be your tab
-
 		pathToTabImage: './images/cache_top_tab.png',          //path to the image for the tab (optionaly can be set using css)
 		imageHeight: '32px',                               //height of tab image
 		imageWidth: '142px',                               //width of tab image    
@@ -765,8 +783,6 @@ $(function(){
 
 	$('.slide-out-div').tabSlideOut({
 		tabHandle: '.handle',                              //class of the element that will be your tab
-
-
 		pathToTabImage: './images/files_top_tab.png',          //path to the image for the tab (optionaly can be set using css)
 		imageHeight: '32px',                               //height of tab image
 		imageWidth: '142px',                               //width of tab image    
@@ -806,6 +822,7 @@ $(function(){
 				$("#log").val(data);
 			}
 		});
+		
 	});
 <?php } ?>
 
@@ -820,7 +837,7 @@ $(function(){
 	});
 	
 	$('.handlenews').click(function() {
-		$('#news').rssfeed('<?php echo (NEWS==""?"http://www.opencart-extensions.co.uk/news/feed.rss":NEWS); ?>',{dateformat: 'MMMM yyyy',errormsg: '<?php echo NEWSERROR; ?>', linktarget: '_blank'}, function(e) {
+		$('#news').rssfeed('<?php echo (NEWS==""?"http://www.opencart-extensions.co.uk/news/feed.xml":NEWS); ?>',{dateformat: 'MMMM yyyy',errormsg: '<?php echo NEWSERROR; ?>', linktarget: '_blank'}, function(e) {
 			$(e).find('div.rssBody').vTicker({ showItems: 3});
 			$('h4 a',e).each(function(i) {
 
