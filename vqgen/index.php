@@ -14,22 +14,36 @@
  */
 
 // Set the default file paths relative to this file
+define('PASSWORD', ''); // secure this tool with a password - leave blank to skip the login screen (see install notes)
 define('LOG', '../vqmod/logs/'); // relative location of vqmod log files folder
 define('LOGMAX', 10); // max viewale size in MB of log file
 define('PATH', '../vqmod/xml/'); // relative path to the vqmod xml folder
 define('CACHE', '../vqmod/vqcache/'); // relative path to the vqmod cache folder
 define('MODSCACHE', '../vqmod/mods.cache'); // relative path to the vqmod mods.cache file
+define('NEWS', ''); // URL to an RSS feed to use in the News tab in place of the default UKSB News - ie. http://www.opencart.com/index.php?route=feature/blog/rss
 
-if (!ini_get('date.timezone')) {
-	date_default_timezone_set('UTC');
+if(isset($_POST['login'])){
+	if($_POST['password']==PASSWORD){
+		setcookie('vqgenlogged','1');
+		header("Location:./");
+	}else{
+		$error = 1;	
+	}
 }
 
+
 include('language.php');
-include('inc/functions.php');
-include('inc/actions.php');
-include('inc/files.php');
-include('inc/log.php');
-include('inc/cache.php');
+
+if(isset($_COOKIE['vqgenlogged'])||PASSWORD==''){
+	if (!ini_get('date.timezone')) {
+		date_default_timezone_set('UTC');
+	}
+	include('inc/functions.php');
+	include('inc/actions.php');
+	include('inc/files.php');
+	include('inc/log.php');
+	include('inc/cache.php');
+}
 ?>
 <!DOCTYPE HTML>
 <head>
@@ -41,6 +55,20 @@ include('inc/cache.php');
 </head>
 <body>
 <?php
+if(!isset($_COOKIE['vqgenlogged'])&&PASSWORD!=''){
+?>
+<div style="width:400px; margin:200px auto 0 auto;">
+<?php if(isset($error)){ ?><p class="remove"><?php echo LOGINFAIL; ?></p><?php } ?>
+<form name="login" id="login" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<fieldset class="ma" style="width:400px;">
+<legend><?php echo LOGIN; ?></legend>
+	<label for="password"><?php echo LOGINPASSWORD; ?></label>
+    <input id="password" name="password" type="password" style="width:200px;" value=""><br><br>
+	<input type="submit" name="login" value="<?php echo LOGIN; ?>" style="margin:0 auto; font-size:2em; font-weight:bold;cursor:pointer;">
+</fieldset>
+</form>
+</div>
+<?php } else {
 if(isset($_GET['generated'])){
 ?>
 <p class="generate"><?php echo FILE_GENERATED . date("G:i"); ?></p>
@@ -231,6 +259,11 @@ if(isset($activevqmods)&&count($activevqmods)>0){
 <?php
 }
 ?>
+</div>
+
+<div class="news">
+<a class="handlenews" href="#">Content</a>
+<div id="news">Loading...</div>
 </div>
 
 <div id="footer">&copy; Copyright <?php echo (date("Y")>2011?'2011 - ':'') . date("Y"); ?> <a href="http://www.uksitebuilder.net/">UK Site Builder Ltd</a> - Get More Great vQmod Extensions at <a href="http://www.opencart-extensions.co.uk/">OpenCart-Extensions.co.uk</a><br><a href="http://uksb.github.com/vqgen/" >vQmod Generator by UK Site Builder Ltd</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a></div>
@@ -699,6 +732,8 @@ $(function() {
 ?>
 <script src="js/jquery.textarea.js"></script>
 <script src="js/jquery.tabSlideOut.v1.3.js"></script>
+<script src="js/jquery.zrssfeed.min.js"></script>
+<script src="js/jquery.vticker.js"></script>
 <script>
 $(function(){
 	$('.slide-out-div3').tabSlideOut({
@@ -744,6 +779,22 @@ $(function(){
 		fixedPosition: false                               //options: true makes it stick(fixed position) on scroll
 	});
 	
+	$('.news').tabSlideOut({
+		tabHandle: '.handlenews',                              //class of the element that will be your tab
+
+
+		pathToTabImage: './images/news_top_tab.png',          //path to the image for the tab (optionaly can be set using css)
+		imageHeight: '32px',                               //height of tab image
+		imageWidth: '142px',                               //width of tab image    
+		tabLocation: 'top',                               //side of screen where tab lives, top, right, bottom, or left
+		speed: 300,                                        //speed of animation
+		action: 'click',                                   //options: 'click' or 'hover', action to trigger animation
+		topPos: '0px',                                   //position from the top
+
+		leftPos: '0px',                                   //position from the left
+		fixedPosition: false                               //options: true makes it stick(fixed position) on scroll
+	});
+
 	$("textarea").tabby();
 	
 <?php if(current_log_file(LOG)!=''&&filesize(LOG . current_log_file(LOG))>1&&filesize(LOG . current_log_file(LOG))<((LOGMAX*1048576)+1)){ ?>
@@ -768,6 +819,17 @@ $(function(){
 		});
 	});
 	
+	$('.handlenews').click(function() {
+		$('#news').rssfeed('<?php echo (NEWS==""?"http://www.opencart-extensions.co.uk/news/feed.rss":NEWS); ?>',{dateformat: 'MMMM yyyy',errormsg: '<span style="color:red;font-weight:bold;">UKSB News could not be loaded.</span><br><br><b>Possible causes:</b><ul><li style="margin:6px;0;">You edited the index.php NEWS define with a malformed RSS feed URL.</li><li style="margin:6px;0;">UKSB forgot to update the News feed.</li><li style="margin:6px;0;">The UKSB server is down. Someone forgot to plug it in.</li><li style="margin:6px;0;">You do not have an internet connection.</li></ul>', linktarget: '_blank'}, function(e) {
+			$(e).find('div.rssBody').vTicker({ showItems: 3});
+			$('h4 a',e).each(function(i) {
+
+				var title = $(this).text();
+				if (title.length > 44) $(this).text(title.substring(0,40)+'...');
+			});
+		});
+	});
+	
 	$('#add3').click(function() {
 		location.href = '<?php echo './?enable=' .$_GET['file']; ?>';
 	});
@@ -785,5 +847,6 @@ $(function(){
 <?php } ?>	
 });
 </script>
+<?php } ?>
 </body>
 </html>

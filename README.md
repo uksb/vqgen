@@ -1,7 +1,7 @@
 # vQmod XML Generator v3.2.1
 
-* Generate XML files for use with vQmod versions 2.3.0 or greater
-* Built-in File Manager and Log Viewer
+* Generate & Edit XML files for use with vQmod versions 2.3.0 or greater
+* Built-in vQmod File Manager, vQmod Log Viewer, vQmod Cache File Viewer and Core File Viewer
 
 **Pre-Requisite**
 
@@ -11,7 +11,7 @@ For further information on vQmod and to download it, please visit http://www.vqm
 
 **author** Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> - http://www.opencart-extensions.co.uk/
 
-**copyright** Copyright (c) 2013, UK Site Builder Ltd
+Copyright (c) 2013, UK Site Builder Ltd
 
 **version** $Id: README.md, v3.2.1 2013-02-05 22:30:00 sp Exp $
 
@@ -20,8 +20,13 @@ For further information on vQmod and to download it, please visit http://www.vqm
 
 **Installation & Defaults**
 
-1. Upload or upload and rename the 'vqgen' directory in this archive to your site root.
-2. **IMPORTANT** Password protect the directory using htaccess/htpassword
+1. Edit index.php and add a Password for the define('PASSWORD', ''); line
+e.g. define('PASSWORD', 'SOMETHING MEMORABLE');
+If you leave the Password undefined, no login screen will be presented [Anyone can access the vQgen tool]
+It is only recommended to leave the Password blank if you are using this tool on your local machine and not on the www.
+You can of course secure the vqgen folder using a htaccess/htpasswd combination if you wish - see (https://www.google.co.uk/search?hl=en-GB&source=hp&biw=&bih=&q=htaccess+htpasswd+tutorial)  
+
+2. Upload or upload and rename the 'vqgen' directory in this archive to your site root.
 
 If not putting the folder on the same level as the vqmod directory, edit the vqgen/index.php and change the relative paths for the set of 4 defines.
 
