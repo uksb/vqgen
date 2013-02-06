@@ -47,7 +47,7 @@ textarea{background:#fff url('../images/add.png') no-repeat;border:1px solid #cc
 .slide-out-div2{padding:40px 20px 20px 20px;width:794px;background:#efefef;border:green 1px solid;color:#000000;}
 .slide-out-div2 h3, .slide-out-div3 h3{display:inline;}
 .slide-out-div3{padding:40px 20px 20px 20px;width:938px;background:#efefef;border:green 1px solid;color:#000000;}
-.news{padding:20px;width:506px;height:320px;background:#efefef;border:green 1px solid;color:#000000;}
+.news{padding:20px;width:506px;height:360px;background:#efefef;border:green 1px solid;color:#000000;}
 #log, #cache{background:#000000;color:#CF3;width:784px;height:600px;padding:5px;border:1px solid #CF3;overflow-y:scroll;}
 #cache{width:928px;}
 table {padding:0;border-spacing:0;border-collapse:collapse;width:600px;border:1px solid #ccc;-webkit-box-shadow:0px 2px 2px #DDDDDD;-moz-box-shadow:0px 2px 2px #DDDDDD;box-shadow:0px 2px 2px #DDDDDD;}

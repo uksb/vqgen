@@ -20,7 +20,7 @@ define('LOGMAX', 10); // max viewale size in MB of log file
 define('PATH', '../vqmod/xml/'); // relative path to the vqmod xml folder
 define('CACHE', '../vqmod/vqcache/'); // relative path to the vqmod cache folder
 define('MODSCACHE', '../vqmod/mods.cache'); // relative path to the vqmod mods.cache file
-define('NEWS', 'http://www.opencart.com/index.php?route=feature/blog/rss'); // Leave blank for UKSB News - Or add a URL to an RSS feed to use in the News tab in place of the default UKSB News - ie. http://www.opencart.com/index.php?route=feature/blog/rss
+define('NEWS', ''); // Leave blank for UKSB News - Or add a URL to an RSS feed to use in the News tab in place of the default UKSB News - ie. http://www.opencart.com/index.php?route=feature/blog/rss
 
 if(isset($_POST['login'])){
 	if($_POST['password']==PASSWORD){
@@ -842,7 +842,7 @@ $(function(){
 			$('h4 a',e).each(function(i) {
 
 				var title = $(this).text();
-				if (title.length > 44) $(this).text(title.substring(0,40)+'...');
+				if (title.length > 64) $(this).text(title.substring(0,60)+'...');
 			});
 		});
 	});
