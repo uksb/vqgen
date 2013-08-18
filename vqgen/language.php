@@ -115,6 +115,8 @@ define('IGREGEX_HELP', 'To use a regular expression for \"Ignore If\", set to \'
 define('REPLACE', 'Replace \"Search\"');
 define('BEFORE', 'Add Before \"Search\"');
 define('AFTER', 'Add After \"Search\"');
+define('IBEFORE', 'Add Inline Before \"Search\"');
+define('IAFTER', 'Add Inline After \"Search\"');
 define('TOP', 'Add to Top of File');
 define('BOTTOM', 'Add to Bottom of File');
 define('ALL', 'Replace Entire File');

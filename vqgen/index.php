@@ -307,6 +307,8 @@ foreach($data as $f){ ?>
 		x += "\n\t\t\t\t<option value=\"replace\"<?php if($op['value'][$arkey]['attributes']['position']=='replace'){ ?> selected=\"selected\"<?php } ?>><?php echo REPLACE; ?></option>";
 		x += "\n\t\t\t\t<option value=\"before\"<?php if($op['value'][$arkey]['attributes']['position']=='before'){ ?> selected=\"selected\"<?php } ?>><?php echo BEFORE; ?></option>";
 		x += "\n\t\t\t\t<option value=\"after\"<?php if($op['value'][$arkey]['attributes']['position']=='after'){ ?> selected=\"selected\"<?php } ?>><?php echo AFTER; ?></option>";
+		x += "\n\t\t\t\t<option value=\"ibefore\"<?php if($op['value'][$arkey]['attributes']['position']=='ibefore'){ ?> selected=\"selected\"<?php } ?>><?php echo IBEFORE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"iafter\"<?php if($op['value'][$arkey]['attributes']['position']=='iafter'){ ?> selected=\"selected\"<?php } ?>><?php echo IAFTER; ?></option>";
 		x += "\n\t\t\t\t<option value=\"top\"<?php if($op['value'][$arkey]['attributes']['position']=='top'){ ?> selected=\"selected\"<?php } ?>><?php echo TOP; ?></option>";
 		x += "\n\t\t\t\t<option value=\"bottom\"<?php if($op['value'][$arkey]['attributes']['position']=='bottom'){ ?> selected=\"selected\"<?php } ?>><?php echo BOTTOM; ?></option>";
 		x += "\n\t\t\t\t<option value=\"all\"<?php if($op['value'][$arkey]['attributes']['position']=='all'){ ?> selected=\"selected\"<?php } ?>><?php echo ALL; ?></option>";
@@ -385,6 +387,8 @@ foreach($data as $f){ ?>
 		x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
 		x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
 		x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+		x += "\n\t\t\t\t<option value=\"ibefore\"><?php echo IBEFORE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"iafter\"><?php echo IAFTER; ?></option>";
 		x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
 		x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
 		x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
@@ -449,6 +453,8 @@ foreach($data as $f){ ?>
 			x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
 			x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
 			x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+			x += "\n\t\t\t\t<option value=\"ibefore\"><?php echo IBEFORE; ?></option>";
+			x += "\n\t\t\t\t<option value=\"iafter\"><?php echo IAFTER; ?></option>";
 			x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
 			x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
 			x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
@@ -534,6 +540,8 @@ $(function() {
 	x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
 	x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
 	x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+	x += "\n\t\t\t\t<option value=\"ibefore\"><?php echo IBEFORE; ?></option>";
+	x += "\n\t\t\t\t<option value=\"iafter\"><?php echo IAFTER; ?></option>";
 	x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
 	x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
 	x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
@@ -603,6 +611,8 @@ $(function() {
 		x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
 		x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
 		x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+		x += "\n\t\t\t\t<option value=\"ibefore\"><?php echo IBEFORE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"iafter\"><?php echo IAFTER; ?></option>";
 		x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
 		x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
 		x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
@@ -668,6 +678,8 @@ $(function() {
 			x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
 			x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
 			x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+			x += "\n\t\t\t\t<option value=\"ibefore\"><?php echo IBEFORE; ?></option>";
+			x += "\n\t\t\t\t<option value=\"iafter\"><?php echo IAFTER; ?></option>";
 			x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
 			x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
 			x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
