@@ -91,3 +91,64 @@ function stripText($text)
 	
 	return $clean;
 }
+
+function getTree($path = '../', $dirs = '', $files = 1) {
+	$ignore = array('vqmod', 'config-dist.php', 'install', 'nbproject', '.svn', '.', '..' );
+	$exts = array('php', 'tpl');
+
+	$tree = array();
+	$full_path = $path . $dirs;
+	$multi = explode(',', $full_path);
+	if (isset($multi[1])) {
+		$full_path = explode('/', $dirs);
+		$full_path = $path . array_pop($multi);
+		$multi = str_replace($path, '', implode(',', $multi)) . ',';
+	} else {
+		$multi = '';
+	}
+	$full_path = explode('/', $full_path);
+	$find = array_pop($full_path);
+	$len = strlen($find);
+	$full_path = implode('/', $full_path) . '/';
+	if (strpos($full_path, '*') !== false) { // Search-Dir has wildcard: bla*/
+		$tdir = explode('*', $full_path);
+		$wild = $tdir[0];
+		if (substr($tdir[1], 0, 1) == '/' && substr($wild, -1) == '/') $tdir[1] = substr($tdir[1], 1);
+		$sdirs = $this->getTree($wild, '', $files);
+		foreach ($sdirs as $sdir) {
+			$tdirlen = strlen($sdir.$tdir[1]) * -1;
+			if (!$tdirlen || substr($sdir, $tdirlen) == $tdir[1] || is_dir($wild . $sdir . $tdir[1])) { // Rest of wildcard found in results...
+				if (is_dir($wild . $sdir . $tdir[1])) {
+					$dirs = $this->getTree($wild . $sdir . $tdir[1], '', $files);
+					$sdir = '*/' . $tdir[1];
+				} else {
+					$dirs = $this->getTree($wild . $sdir, '', $files);
+					$sdir = str_replace(substr($sdir, 0, $tdirlen), '*', $sdir);
+				}
+				foreach ($dirs as $dir) {
+					$file = $multi . str_replace($path, '', $wild . $sdir) . $dir;
+					if (!in_array($file, $tree)) $tree[] = $file;
+				}
+			}
+		}
+	} else {
+		if (file_exists($full_path)) {
+			$dh = opendir($full_path);
+			while (false !== ($file = readdir($dh))) {
+				if (!in_array($file, $ignore) && (!$find || substr($file, 0, $len) == $find)) {
+					$dir = $full_path . $file;
+					if (is_dir($dir)) {
+						$dir .= '/';
+						$tree[] = $multi . str_replace($path, '', $dir);
+					} else {
+						$ext = explode('.', $file);
+						$ext = array_pop($ext);
+						if ($files && in_array($ext, $exts)) $tree[] = $multi . str_replace($path, '', $dir);
+					}
+				}
+			}
+			closedir($dh);
+		}
+	}
+	return $tree;
+}
