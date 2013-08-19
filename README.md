@@ -1,11 +1,11 @@
-# vQmod XML Generator v3.2.1
+# vQmod XML Generator v3.3.0
 
-* Generate & Edit XML files for use with vQmod versions 2.3.0 or greater
-* Built-in vQmod File Manager, vQmod Log Viewer, vQmod Cache File Viewer and Core File Viewer
+* Generate & Edit XML files for use with vQmod versions 2.4.0 or greater
+* Built-in vQmod File Manager, vQmod Log Viewer and vQmod Cache File Viewer
 
 **Pre-Requisite**
 
-vQmod version 2.3.0 is required for this package
+vQmod version 2.4.0 is required for this package
 
 For further information on vQmod and to download it, please visit http://www.vqmod.com/
 
@@ -13,7 +13,7 @@ For further information on vQmod and to download it, please visit http://www.vqm
 
 Copyright (c) 2013, UK Site Builder Ltd
 
-**version** $Id: README.md, v3.2.1 2013-02-05 22:30:00 sp Exp $
+**version** $Id: README.md, v3.3.0 2013-08-19 22:30:00 sp Exp $
 
 **license** http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
 
@@ -39,3 +39,4 @@ If not putting the folder on the same level as the vqmod directory, edit the vqg
 **Future Would Likes**
 
 Generate a manual installation text or html file from the vqmod with easy to follow instructions
+Display list of vqmodable files (.php .tpl) load in to side-by-side panel
