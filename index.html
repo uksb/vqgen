@@ -31,18 +31,20 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h1>vQmod XML Generator v3.2.1</h1>
+        <h1>vQmod XML Generator v3.3.0</h1>
 
 <ul>
-<li>Generate XML files for use with vQmod versions 2.3.0 or greater</li>
+<li>Generate XML files for use with vQmod versions 2.4.0 or greater</li>
 <li>Built-in File Manager, Log Viewer and Cache Viewer</li>
 </ul><p><strong>Pre-Requisite</strong></p>
 
-<p>vQmod version 2.3.0 is required for this package</p>
+<p>vQmod version 2.4.0 is required for this package</p>
 
 <p><strong>vQmod Version Compatibility</strong></p>
 
 <ul>
+<li>for vQmod version 2.4.x -&gt; <a href="https://github.com/uksb/vqgen/archive/v3.3.0.zip">https://github.com/uksb/vqgen/archive/v3.3.0.zip</a>
+</li>
 <li>for vQmod version 2.3.x -&gt; <a href="https://github.com/uksb/vqgen/archive/v3.2.1.zip">https://github.com/uksb/vqgen/archive/v3.2.1.zip</a>
 </li>
 <li>for vQmod version 2.2.x -&gt; <a href="https://github.com/uksb/vqgen/archive/v3.1.0.zip">https://github.com/uksb/vqgen/archive/v3.1.0.zip</a>
@@ -60,10 +62,12 @@
 <p><strong>Installation &amp; Defaults</strong></p>
 
 <ol>
-<li>Upload or upload and rename the 'vqgen' directory from the download to your site root.</li>
-<li>
-<strong>IMPORTANT</strong> Password protect the directory using htaccess/htpassword</li>
-</ol><p>If not putting the folder on the same level as the vqmod directory, edit the vqgen/index.php and change the relative paths for the set of 4 defines.</p>
+  <li>Edit index.php and add a Password for the define('PASSWORD', ''); line  e.g. define('PASSWORD', 'SOMETHING MEMORABLE');  If you leave the Password undefined, no login screen will be presented [Anyone can access the vQgen tool]  It is only recommended to leave the Password blank if you are using this tool on your local machine and not on the www.  You can of course secure the vqgen folder using a htaccess/htpasswd combination if you wish - see (<a href="https://www.google.co.uk/search?hl=en-GB&source=hp&biw=&bih=&q=htaccess+htpasswd+tutorial">https://www.google.co.uk/search?hl=en-GB&amp;source=hp&amp;biw=&amp;bih=&amp;q=htaccess+htpasswd+tutorial</a>)
+  </li>
+  <li>Upload or upload and rename the 'vqgen' directory in this archive to your site root.
+  </li>
+</ol>
+<p>If not putting the folder on the same level as the vqmod   directory, edit the vqgen/index.php and change the relative paths for   the set of 4 defines.</p>
 
 <p><strong>Known Issues</strong></p>
 
@@ -71,7 +75,8 @@
 <li>Fails to read vqmod xml files that contain html comments which are outside of CDATA tags.</li>
 </ul><p><strong>Future Would Likes</strong></p>
 
-<p>Generate a manual installation text or html file from the vqmod with easy to follow instructions</p>
+<p>Generate a manual installation text or html file from the vqmod with easy to follow instructions<br>
+  Display list of vqmodable files (.php .tpl) load in to side-by-side panel</p>
       </section>
     </div>
 
