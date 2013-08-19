@@ -1,0 +1,7 @@
+# Prevent Directoy listing 
+Options -Indexes
+
+<FilesMatch "\.(php)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>

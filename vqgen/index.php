@@ -1,7 +1,7 @@
 <?php
 /**
- * vQmod XML Generator v3.2.1
- * 
+ * vQmod XML Generator v3.3.0
+* 
  * Generate XML files for use with vQmod.
  * Built-in File Manager and Log Viewer.
  *
@@ -9,27 +9,41 @@
  * 
  * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
  * @copyright Copyright (c) 2013, UK Site Builder Ltd
- * @version $Id: index.php, v3.2.1 2013-02-05 22:30:00 sp Exp $
+ * @version $Id: index.php, v3.3.0 2013-08-19 22:30:00 sp Exp $
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
  */
 
 // Set the default file paths relative to this file
+define('PASSWORD', ''); // secure this tool with a password - leave blank to skip the login screen (see install notes)
 define('LOG', '../vqmod/logs/'); // relative location of vqmod log files folder
 define('LOGMAX', 10); // max viewale size in MB of log file
 define('PATH', '../vqmod/xml/'); // relative path to the vqmod xml folder
 define('CACHE', '../vqmod/vqcache/'); // relative path to the vqmod cache folder
 define('MODSCACHE', '../vqmod/mods.cache'); // relative path to the vqmod mods.cache file
+define('NEWS', ''); // Leave blank for UKSB News - Or add a URL to an RSS feed to use in the News tab in place of the default UKSB News - ie. http://www.opencart.com/index.php?route=feature/blog/rss
 
-if (!ini_get('date.timezone')) {
-	date_default_timezone_set('UTC');
+if(isset($_POST['login'])){
+	if($_POST['password']==PASSWORD){
+		setcookie('vqgenlogged','1');
+		header("Location:./");
+	}else{
+		$error = 1;	
+	}
 }
 
+
 include('language.php');
-include('inc/functions.php');
-include('inc/actions.php');
-include('inc/files.php');
-include('inc/log.php');
-include('inc/cache.php');
+
+if(isset($_COOKIE['vqgenlogged'])||PASSWORD==''){
+	if (!ini_get('date.timezone')) {
+		date_default_timezone_set('UTC');
+	}
+	include('inc/functions.php');
+	include('inc/actions.php');
+	include('inc/files.php');
+	include('inc/log.php');
+	include('inc/cache.php');
+}
 ?>
 <!DOCTYPE HTML>
 <head>
@@ -40,6 +54,22 @@ include('inc/cache.php');
 <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
+<?php
+if(!isset($_COOKIE['vqgenlogged'])&&PASSWORD!=''){
+?>
+<div style="width:400px; margin:200px auto 0 auto;">
+<?php if(isset($error)){ ?><p class="remove"><?php echo LOGINFAIL; ?></p><?php } ?>
+<form name="login" id="login" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<fieldset class="ma" style="width:400px;">
+<legend><?php echo LOGIN; ?></legend>
+	<label for="password"><?php echo LOGINPASSWORD; ?></label>
+    <input id="password" name="password" type="password" style="width:200px;" value=""><br><br>
+	<input type="submit" name="login" value="<?php echo LOGIN; ?>" style="margin:0 auto; font-size:2em; font-weight:bold;cursor:pointer;">
+</fieldset>
+</form>
+</div>
+<?php } else { ?>
+<div class="ui-layout-center">
 <?php
 if(isset($_GET['generated'])){
 ?>
@@ -136,7 +166,7 @@ if(!isset($_POST['generatexml'])&&!isset($_GET['file'])){
 ?>
 
 <div class="slide-out-div3">
-<a class="handle3" href="#">Content</a>
+<a class="handle3" href="#"><?php echo CONTENT; ?></a>
 <h3><?php echo VQMOD_CACHE_FILES; ?></h3> <a href="./?clearvqcache=1"><?php echo CLEAR_VQMOD_CACHE; ?></a> <a href="./?clearmodscache=1"><?php echo CLEAR_MODS_CACHE; ?></a><br><br>
 <?php if(isset($_GET['cleared'])&&$_GET['cleared']=='modscache'){ ?><span class="message"><?php echo CLEARED_MODSCACHE; ?></span><br><br><?php } ?>
 <?php if(isset($_GET['cleared'])&&$_GET['cleared']=='vqcache'){ ?><span class="message"><?php echo CLEARED_VQCACHE; ?></span><br><br><?php } ?>
@@ -159,7 +189,7 @@ if(!isset($_POST['generatexml'])&&!isset($_GET['file'])){
 </div>
 
 <div class="slide-out-div2">
-<a class="handle2" href="#">Content</a>
+<a class="handle2" href="#"><?php echo CONTENT; ?></a>
 <h3><?php echo VQMOD_LOG_FILES; ?></h3> <a href="./?clearlogs=1"><?php echo CLEAR_VQMOD_LOGS; ?></a> <a href="./?clearlog=1"><?php echo CLEAR_THIS_LOG; ?></a><br><br>
 <?php if(isset($_GET['handle2'])&&$_GET['handle2']=='alllogs'){ ?><span class="message"><?php echo CLEARED_ALL_LOGS; ?></span><br><br><?php } ?>
 <?php if(isset($_GET['handle2'])&&$_GET['handle2']!='alllogs'){ ?><span class="message"><?php echo sprintf(CLEARED_LOG_FILE, $_GET['handle2']); ?></span><br><br><?php } ?>
@@ -167,10 +197,10 @@ if(!isset($_POST['generatexml'])&&!isset($_GET['file'])){
 </div>
 
 <div class="slide-out-div">
-<a class="handle" href="#">Content</a>
+<a class="handle" href="#"><?php echo CONTENT; ?></a>
 <?php if(isset($_GET['handle1'])&&substr($_GET['handle1'], 0, 7)=='deleted'){ ?><span class="message"><?php echo sprintf(VQMOD_FILE_DELETED, substr($_GET['handle1'], 8, (strlen($_GET['handle1'])-8))); ?></span><br><br><?php } 
 elseif(isset($_GET['handle1'])&&$_GET['handle1']=='enabledall'){ ?><span class="message"><?php echo VQMOD_FILES_ENABLED; ?></span><br><br><?php }
-elseif(isset($_GET['handle1'])&&substr($_GET['handle1'], 0, 7)=='enabled'){ ?><span class="message"><?php echo sprintf(VQMOD_FILE_ENABLED, substr($_GET['handle1'], 8, (strlen($_GET['handle1'])-8))); ?></span><br><br><?php } 
+elseif(isset($_GET['handle1'])&&substr($_GET['handle1'], 0, 7)=='enabled'){ ?><span class="message"><?php echo sprintf(VQMOD_FILE_ENABLED, rtrim(substr($_GET['handle1'], 8, (strlen($_GET['handle1'])-8)),'_')); ?></span><br><br><?php } 
 elseif(isset($_GET['handle1'])&&$_GET['handle1']=='disabledall'){ ?><span class="message"><?php echo VQMOD_FILES_DISABLED; ?></span><br><br><?php }
 elseif(isset($_GET['handle1'])&&substr($_GET['handle1'], 0, 8)=='disabled'){ ?><span class="message"><?php echo sprintf(VQMOD_FILE_DISABLED, substr($_GET['handle1'], 9, (strlen($_GET['handle1'])-9))); ?></span><br><br><?php } ?>
 <?php
@@ -233,12 +263,13 @@ if(isset($activevqmods)&&count($activevqmods)>0){
 ?>
 </div>
 
+<div class="news">
+<a class="handlenews" href="#"><?php echo CONTENT; ?></a>
+<div id="news"><?php echo LOADING; ?></div>
+</div>
+
 <div id="footer">&copy; Copyright <?php echo (date("Y")>2011?'2011 - ':'') . date("Y"); ?> <a href="http://www.uksitebuilder.net/">UK Site Builder Ltd</a> - Get More Great vQmod Extensions at <a href="http://www.opencart-extensions.co.uk/">OpenCart-Extensions.co.uk</a><br><a href="http://uksb.github.com/vqgen/" >vQmod Generator by UK Site Builder Ltd</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a></div>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.min.js"></script>
-<script>
-	// Fallback to loading jQuery from a local path if the CDN is unavailable
-	(window.jQuery || document.write('<script src="/js/jquery-1.9.0.min.js"><\/script>'));
-</script>
+<script src="js/jquery-1.9.0.min.js"></script>
 <?php 
 if(isset($_GET['file'])){
 ?>
@@ -278,6 +309,8 @@ foreach($data as $f){ ?>
 		x += "\n\t\t\t\t<option value=\"replace\"<?php if($op['value'][$arkey]['attributes']['position']=='replace'){ ?> selected=\"selected\"<?php } ?>><?php echo REPLACE; ?></option>";
 		x += "\n\t\t\t\t<option value=\"before\"<?php if($op['value'][$arkey]['attributes']['position']=='before'){ ?> selected=\"selected\"<?php } ?>><?php echo BEFORE; ?></option>";
 		x += "\n\t\t\t\t<option value=\"after\"<?php if($op['value'][$arkey]['attributes']['position']=='after'){ ?> selected=\"selected\"<?php } ?>><?php echo AFTER; ?></option>";
+		x += "\n\t\t\t\t<option value=\"ibefore\"<?php if($op['value'][$arkey]['attributes']['position']=='ibefore'){ ?> selected=\"selected\"<?php } ?>><?php echo IBEFORE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"iafter\"<?php if($op['value'][$arkey]['attributes']['position']=='iafter'){ ?> selected=\"selected\"<?php } ?>><?php echo IAFTER; ?></option>";
 		x += "\n\t\t\t\t<option value=\"top\"<?php if($op['value'][$arkey]['attributes']['position']=='top'){ ?> selected=\"selected\"<?php } ?>><?php echo TOP; ?></option>";
 		x += "\n\t\t\t\t<option value=\"bottom\"<?php if($op['value'][$arkey]['attributes']['position']=='bottom'){ ?> selected=\"selected\"<?php } ?>><?php echo BOTTOM; ?></option>";
 		x += "\n\t\t\t\t<option value=\"all\"<?php if($op['value'][$arkey]['attributes']['position']=='all'){ ?> selected=\"selected\"<?php } ?>><?php echo ALL; ?></option>";
@@ -356,6 +389,8 @@ foreach($data as $f){ ?>
 		x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
 		x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
 		x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+		x += "\n\t\t\t\t<option value=\"ibefore\"><?php echo IBEFORE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"iafter\"><?php echo IAFTER; ?></option>";
 		x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
 		x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
 		x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
@@ -420,6 +455,8 @@ foreach($data as $f){ ?>
 			x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
 			x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
 			x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+			x += "\n\t\t\t\t<option value=\"ibefore\"><?php echo IBEFORE; ?></option>";
+			x += "\n\t\t\t\t<option value=\"iafter\"><?php echo IAFTER; ?></option>";
 			x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
 			x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
 			x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
@@ -505,6 +542,8 @@ $(function() {
 	x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
 	x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
 	x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+	x += "\n\t\t\t\t<option value=\"ibefore\"><?php echo IBEFORE; ?></option>";
+	x += "\n\t\t\t\t<option value=\"iafter\"><?php echo IAFTER; ?></option>";
 	x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
 	x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
 	x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
@@ -574,6 +613,8 @@ $(function() {
 		x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
 		x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
 		x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+		x += "\n\t\t\t\t<option value=\"ibefore\"><?php echo IBEFORE; ?></option>";
+		x += "\n\t\t\t\t<option value=\"iafter\"><?php echo IAFTER; ?></option>";
 		x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
 		x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
 		x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
@@ -639,6 +680,8 @@ $(function() {
 			x += "\n\t\t\t\t<option value=\"replace\" selected=\"selected\"><?php echo REPLACE; ?></option>";
 			x += "\n\t\t\t\t<option value=\"before\"><?php echo BEFORE; ?></option>";
 			x += "\n\t\t\t\t<option value=\"after\"><?php echo AFTER; ?></option>";
+			x += "\n\t\t\t\t<option value=\"ibefore\"><?php echo IBEFORE; ?></option>";
+			x += "\n\t\t\t\t<option value=\"iafter\"><?php echo IAFTER; ?></option>";
 			x += "\n\t\t\t\t<option value=\"top\"><?php echo TOP; ?></option>";
 			x += "\n\t\t\t\t<option value=\"bottom\"><?php echo BOTTOM; ?></option>";
 			x += "\n\t\t\t\t<option value=\"all\"><?php echo ALL; ?></option>";
@@ -697,13 +740,16 @@ $(function() {
 <?php
 }
 ?>
-<script src="js/jquery.textarea.js"></script>
+</div>
 <script src="js/jquery.tabSlideOut.v1.3.js"></script>
+<script src="js/jquery.zrssfeed.min.js"></script>
+<script src="js/jquery.vticker.js"></script>
+<script src="js/jquery.textarea.js"></script>
 <script>
+var myLayout;
 $(function(){
-	$('.slide-out-div3').tabSlideOut({
+ 	$('.slide-out-div3').tabSlideOut({
 		tabHandle: '.handle3',                              //class of the element that will be your tab
-
 		pathToTabImage: './images/cache_top_tab.png',          //path to the image for the tab (optionaly can be set using css)
 		imageHeight: '32px',                               //height of tab image
 		imageWidth: '142px',                               //width of tab image    
@@ -730,8 +776,6 @@ $(function(){
 
 	$('.slide-out-div').tabSlideOut({
 		tabHandle: '.handle',                              //class of the element that will be your tab
-
-
 		pathToTabImage: './images/files_top_tab.png',          //path to the image for the tab (optionaly can be set using css)
 		imageHeight: '32px',                               //height of tab image
 		imageWidth: '142px',                               //width of tab image    
@@ -744,6 +788,22 @@ $(function(){
 		fixedPosition: false                               //options: true makes it stick(fixed position) on scroll
 	});
 	
+	$('.news').tabSlideOut({
+		tabHandle: '.handlenews',                              //class of the element that will be your tab
+
+
+		pathToTabImage: './images/news_top_tab.png',          //path to the image for the tab (optionaly can be set using css)
+		imageHeight: '32px',                               //height of tab image
+		imageWidth: '142px',                               //width of tab image    
+		tabLocation: 'top',                               //side of screen where tab lives, top, right, bottom, or left
+		speed: 300,                                        //speed of animation
+		action: 'click',                                   //options: 'click' or 'hover', action to trigger animation
+		topPos: '0px',                                   //position from the top
+
+		leftPos: '0px',                                   //position from the left
+		fixedPosition: false                               //options: true makes it stick(fixed position) on scroll
+	});
+
 	$("textarea").tabby();
 	
 <?php if(current_log_file(LOG)!=''&&filesize(LOG . current_log_file(LOG))>1&&filesize(LOG . current_log_file(LOG))<((LOGMAX*1048576)+1)){ ?>
@@ -755,6 +815,7 @@ $(function(){
 				$("#log").val(data);
 			}
 		});
+		
 	});
 <?php } ?>
 
@@ -765,6 +826,17 @@ $(function(){
 			success: function(data){
 				$("#cache").val(data);
 			}
+		});
+	});
+	
+	$('.handlenews').click(function() {
+		$('#news').rssfeed('<?php echo (NEWS==""?"http://www.opencart-extensions.co.uk/news/feed.xml":NEWS); ?>',{dateformat: 'MMMM yyyy',errormsg: '<?php echo NEWSERROR; ?>', linktarget: '_blank'}, function(e) {
+			$(e).find('div.rssBody').vTicker({ showItems: 3});
+			$('h4 a',e).each(function(i) {
+
+				var title = $(this).text();
+				if (title.length > 64) $(this).text(title.substring(0,60)+'...');
+			});
 		});
 	});
 	
@@ -785,5 +857,6 @@ $(function(){
 <?php } ?>	
 });
 </script>
+<?php } ?>
 </body>
 </html>

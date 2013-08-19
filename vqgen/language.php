@@ -1,7 +1,7 @@
 <?php
 /**
- * vQmod XML Generator v3.2.1
- * 
+ * vQmod XML Generator v3.3.0
+* 
  * Generate XML files for use with vQmod.
  * Built-in File Manager and Log Viewer.
  *
@@ -9,14 +9,17 @@
  * 
  * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
  * @copyright Copyright (c) 2013, UK Site Builder Ltd
- * @version $Id: language.php, v3.2.1 2013-02-05 22:30:00 sp Exp $
+ * @version $Id: language.php, v3.3.0 2013-08-19 22:30:00 sp Exp $
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
  */
 
 // General
 define('PACKAGE_NAME', 'vQmod XML File Generator');
-define('OPENING_STATEMENT', '<p>First of all you need to install vQmod version 2.2.x if you haven\'t got it already.</p><p>For more info on vQmod and what it does visit <a href="http://www.vqmod.com/">vQmod.com</a></p>');
+define('OPENING_STATEMENT', '<p>First of all you need to install vQmod version 2.3.x if you haven\'t got it already.</p><p>For more info on vQmod and what it does visit <a href="http://www.vqmod.com/">vQmod.com</a></p>');
 define('FILL_OUT_FORM', 'Fill out the form below with your file edits');
+define('LOGIN', 'Login');
+define('LOGINFAIL', 'Incorrect Login - Please Try Again!');
+define('LOGINPASSWORD', '<b>Password:</b> ');
 
 // vQmod Files Pull Down section
 define('VQMOD_FILES_INACTIVE', 'Newly Created, Edited and Inactive vQmod Files');
@@ -112,6 +115,8 @@ define('IGREGEX_HELP', 'To use a regular expression for \"Ignore If\", set to \'
 define('REPLACE', 'Replace \"Search\"');
 define('BEFORE', 'Add Before \"Search\"');
 define('AFTER', 'Add After \"Search\"');
+define('IBEFORE', 'Add Inline Before \"Search\"');
+define('IAFTER', 'Add Inline After \"Search\"');
 define('TOP', 'Add to Top of File');
 define('BOTTOM', 'Add to Bottom of File');
 define('ALL', 'Replace Entire File');
@@ -129,6 +134,7 @@ define('CLEAR_REMOVE_ON_GENERATE', "Please clear the \'Remove on Generate\' chec
 
 // Messages
 define('FILE_GENERATED', 'File Generated Successfully at ');
+define('CONTENT', 'Content');
 define('LOADING', 'Loading...');
 define('DONATE', 'If you find this tool useful, please buy me a beer or two :-)');
 define('CLEARED_MODSCACHE', 'The mods.cache file has been cleared!');
@@ -141,3 +147,4 @@ define('VQMOD_FILE_DISABLED', 'vqmod/xml/%s has been disabled!');
 define('VQMOD_FILES_DISABLED', 'All vqmod/xml files have been disabled!');
 define('VQMOD_FILE_ENABLED', 'vqmod/xml/%s has been enabled!');
 define('VQMOD_FILES_ENABLED', 'All vqmod/xml files have been enabled!');
+define('NEWSERROR', '<span style="color:red;font-weight:bold;">UKSB News could not be loaded.</span><br><br><b>Possible causes:</b><ul><li style="margin:6px;0;">You edited the index.php NEWS define with a malformed RSS feed URL.</li><li style="margin:6px;0;">UKSB forgot to update the News feed.</li><li style="margin:6px;0;">The UKSB server is down. Someone forgot to plug it in.</li><li style="margin:6px;0;">You do not have an internet connection.</li></ul>');
