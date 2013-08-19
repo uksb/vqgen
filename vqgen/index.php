@@ -739,9 +739,6 @@ $(function() {
 }
 ?>
 </div>
-<div class="ui-layout-east">East</div>
-<script src="js/jquery-ui-latest.js"></script>
-<script src="js/jquery.layout-latest.js"></script>
 <script src="js/jquery.tabSlideOut.v1.3.js"></script>
 <script src="js/jquery.zrssfeed.min.js"></script>
 <script src="js/jquery.vticker.js"></script>
@@ -749,22 +746,6 @@ $(function() {
 <script>
 var myLayout;
 $(function(){
-	myLayout = $('body').layout({
-		
-		applyDemoStyles: true,
-		initClosed: true,
-		initHidden: true,
-		east__slidable: false,
-		east__resizable: false,
-		east__size:$(document).width()-1000,
-		east__minSize:$(document).width()-1000,
-		east__maxSize:$(document).width()-1000,
-		//east__resizerTip: 'Drag to Resize!',
-		east__fxName: 'slide',
-		east__fxSpeed: 'fast'
-		
-	});
- 
  	$('.slide-out-div3').tabSlideOut({
 		tabHandle: '.handle3',                              //class of the element that will be your tab
 		pathToTabImage: './images/cache_top_tab.png',          //path to the image for the tab (optionaly can be set using css)
