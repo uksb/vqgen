@@ -5,13 +5,13 @@
 
 **Pre-Requisite**
 
-vQmod version 2.4.0 is required for this package
+vQmod version 2.4.0 or greater is required for this package
 
 For further information on vQmod and to download it, please visit http://www.vqmod.com/
 
 **author** Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> - http://www.opencart-extensions.co.uk/
 
-Copyright (c) 2013, UK Site Builder Ltd
+Copyright (c) 2014, UK Site Builder Ltd
 
 **version** $Id: README.md, v3.3.0 2013-08-19 22:30:00 sp Exp $
 
