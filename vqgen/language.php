@@ -8,14 +8,14 @@
  * For further information please visit {@link http://www.vqmod.com/}
  * 
  * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
- * @copyright Copyright (c) 2013, UK Site Builder Ltd
+ * @copyright Copyright (c) 2014, UK Site Builder Ltd
  * @version $Id: language.php, v3.3.0 2013-08-19 22:30:00 sp Exp $
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
  */
 
 // General
 define('PACKAGE_NAME', 'vQmod XML File Generator');
-define('OPENING_STATEMENT', '<p>First of all you need to install vQmod version 2.3.x if you haven\'t got it already.</p><p>For more info on vQmod and what it does visit <a href="http://www.vqmod.com/">vQmod.com</a></p>');
+define('OPENING_STATEMENT', '<p>First of all you need to install vQmod version 2.4.x or greater if you haven\'t got it already.</p><p>For more info on vQmod and what it does visit <a href="http://www.vqmod.com/">vQmod.com</a></p>');
 define('FILL_OUT_FORM', 'Fill out the form below with your file edits');
 define('LOGIN', 'Login');
 define('LOGINFAIL', 'Incorrect Login - Please Try Again!');
