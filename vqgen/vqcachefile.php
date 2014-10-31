@@ -8,7 +8,7 @@
  * For further information please visit {@link http://www.vqmod.com/}
  * 
  * @author Simon Powers - UK Site Buidler Ltd <info@uksitebuilder.net> {@link http://uksb.github.com/vqgen/}
- * @copyright Copyright (c) 2013, UK Site Builder Ltd
+ * @copyright Copyright (c) 2014, UK Site Builder Ltd
  * @version $Id: vqcachefile.php, v3.3.0 2013-08-19 22:30:00 sp Exp $
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-ShareAlike 3.0 Unported License
  */
